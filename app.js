@@ -1,5 +1,24 @@
+import { soundList } from "https://tt-sensei.github.io/sounds-recipe-/sounds.js";
 import { badgeSystem } from "./badges.js";
 const $ = (selector, root = document) => root.querySelector(selector);
+
+let soundContext = null;
+let soundEnabled = true;
+
+function playSound(id, volume = 0.22) {
+  if (!soundEnabled) return;
+  const recipe = soundList.find(item => item.id === id);
+  if (!recipe) return;
+  try {
+    if (!soundContext) {
+      soundContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (soundContext.state === "suspended") soundContext.resume();
+    recipe.play(soundContext, volume);
+  } catch {
+    // 音が使えない環境でも教材の操作は止めない。
+  }
+}
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 const LEVELS = [
@@ -928,6 +947,7 @@ function nextQuestion() {
 
 function finishLevel() {
   $("#completeOverlay").hidden = true;
+  playSound("practice", 0.2);
   showScreen(homeScreen);
   renderHome();
 }
