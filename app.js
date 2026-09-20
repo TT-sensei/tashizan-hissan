@@ -165,6 +165,7 @@ function battlePlaceCorrect(){
 function battleProblemComplete(){
   if(battleState.finished)return;
   battleState.correct+=1;
+  $("#sessionCorrect").textContent="正解 "+battleState.correct;
   battleState.enemyIndex+=1;
   if(battleState.enemyIndex>=battleState.questionTotal){
     finishBattle(true,battleState.mode==="battle"?"バトルクリア！":"タイムアタック終了！");
