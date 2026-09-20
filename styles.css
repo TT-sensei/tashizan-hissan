@@ -78,3 +78,12 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
   .pad-button{min-height:40px;font-size:19px}
   .number-pad{gap:5px}
 }
+
+
+.carry-choice-wrap{width:100%}
+.carry-choice-label{margin:0 0 7px;text-align:center;color:var(--muted);font-size:13px;font-weight:900}
+.carry-choice-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-height:760px) and (orientation:landscape){
+  .carry-choice-label{font-size:12px;margin-bottom:5px}
+  .carry-choice-buttons{gap:6px}
+}
