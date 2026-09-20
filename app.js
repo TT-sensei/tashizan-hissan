@@ -282,21 +282,7 @@ function showScreen(screen) {
   screen.classList.add("active");
 }
 
-function renderHome() {
-  $("#homeCorrect").textContent = String(state.totalCorrect);
-  levelGrid.innerHTML = LEVELS.map(level => {
-    return '<button class="level-card" type="button" data-level="' + level.id + '">' +
-      '<div><div class="num">' + level.short + '</div>' +
-      '<div class="name">' + level.name + '</div>' +
-      '<div class="desc">' + level.description.replaceAll("\n", "<br>") + '</div></div>' +
-      '<div class="example">' + level.example + '</div></button>';
-  }).join("");
-
-  $$(".level-card", levelGrid).forEach(button => {
-    button.addEventListener("click", () => startLevel(Number(button.dataset.level)));
-  });
-}
-
+function renderHome() {}
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
