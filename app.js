@@ -77,7 +77,7 @@ const BATTLE_SETUP_KEY = "tashizanHissanBattleSetup.v1";
 const battleState = {
   // 初期値を持たせ、保存データや描画途中の不具合があっても開始条件を失わないようにする。
   mode:"battle", heroIndex:0, levelId:1, enemyIndex:0, enemies:[],
-  mistakes:0, correct:0, questionTotal:5, startedAt:0, timerId:null,
+  mistakes:0, correct:0, combo:0, questionTotal:5, startedAt:0, timerId:null,
   enemyHp:0, enemyMaxHp:0, finished:false
 };
 const battleHud = $("#battleHud");
@@ -187,6 +187,7 @@ function startBattleMode(){
   battleState.enemyIndex=0;
   battleState.mistakes=0;
   battleState.correct=0;
+  battleState.combo=0;
   battleState.startedAt=performance.now();
   battleState.finished=false;
   showScreen(gameScreen);
@@ -239,37 +240,100 @@ function updateBattleHud(){
 function registerBattleMistake(){
   if(battleState.finished || !battleState.mode)return;
   battleState.mistakes=Math.min(5,battleState.mistakes+1);
+  battleState.combo=0;
   badgeSystem.mistake();
   playRecipe("wrong", 0.9);
+  battleDamage();
   updateBattleHud();
   if(battleState.mode==="battle" && battleState.mistakes>=5){
     finishBattle(false,"ゲームオーバー");
   }
 }
-function battleAttack(){
+const FANTASY_ACTION_CANDIDATES={
+  attack:["{image}.webp","{id}.webp","{image}-attack.webp","{id}-attack.webp","attack-{image}.webp","attack-{id}.webp","{image}.png","{id}.png","{image}-attack.png","{id}-attack.png","attack-{image}.png","attack-{id}.png"],
+  damage:["{image}.webp","{id}.webp","{image}-damage.webp","{id}-damage.webp","damage-{image}.webp","damage-{id}.webp","{image}.png","{id}.png","{image}-damage.png","{id}-damage.png","damage-{image}.png","damage-{id}.png"],
+  special:["{image}.webp","{id}.webp","{image}-special.webp","{id}-special.webp","special-{image}.webp","special-{id}.webp","{image}.png","{id}.png","{image}-special.png","{id}-special.png","special-{image}.png","special-{id}.png"]
+};
+const fantasyActionCache={};
+function fantasyActionUrl(hero,action){
+  const key=hero.id+":"+action;
+  return fantasyActionCache[key] || null;
+}
+function loadFantasyAction(hero,action,onReady){
+  const key=hero.id+":"+action;
+  if(fantasyActionCache[key]){onReady(fantasyActionCache[key]);return;}
+  const templates=FANTASY_ACTION_CANDIDATES[action]||[];
+  const bases=[FANTASY_BASE+action+"/",NAVi_BASE+"fantasy/"+action+"/"];
+  const candidates=[];
+  for(const base of bases){
+    for(const template of templates){
+      const name=template.replaceAll("{image}",hero.image).replaceAll("{id}",hero.id);
+      candidates.push(base+name);
+    }
+  }
+  let index=0;
+  const tryNext=()=>{
+    if(index>=candidates.length){onReady(null);return;}
+    const src=candidates[index++];
+    const probe=new Image();
+    probe.onload=()=>{fantasyActionCache[key]=src;onReady(src);};
+    probe.onerror=tryNext;
+    probe.src=src;
+  };
+  tryNext();
+}
+function playBattleHeroAction(action){
+  if(battleState.finished)return;
+  const hero=HEROES[battleState.heroIndex];
+  const img=$("#heroBattleImage");
+  loadFantasyAction(hero,action,(src)=>{
+    if(!src || battleState.finished)return;
+    img.src=src;
+    img.classList.remove("hero-action-pop","hero-special-pop","hero-damage-pop");
+    void img.offsetWidth;
+    img.classList.add(action==="special"?"hero-special-pop":action==="damage"?"hero-damage-pop":"hero-action-pop");
+    const duration=action==="special"?900:600;
+    window.setTimeout(()=>{
+      if(!battleState.finished && battleState.heroIndex===HEROES.indexOf(hero)){
+        img.src=FANTASY_BASE+hero.image+".webp";
+      }
+      img.classList.remove("hero-action-pop","hero-special-pop","hero-damage-pop");
+    },duration);
+  });
+}
+function battleAttack(action="attack"){
   if(battleState.finished)return;
   battleState.enemyHp=Math.max(0,battleState.enemyHp-1);
   const banner=$("#battleFieldBanner");
-  $("#battleAttackMessage").textContent="こうげき！";
+  const isSpecial=action==="special";
+  $("#battleAttackMessage").textContent=isSpecial?"スペシャル！":"こうげき！";
   banner.hidden=false;
-  banner.classList.remove("attack-pop"); void banner.offsetWidth; banner.classList.add("attack-pop");
+  banner.classList.remove("attack-pop","special-pop"); void banner.offsetWidth; banner.classList.add(isSpecial?"special-pop":"attack-pop");
   const img=$("#enemyBattleImage");
   img.classList.remove("enemy-hit"); void img.offsetWidth; img.classList.add("enemy-hit");
+  playBattleHeroAction(action);
   updateBattleHud();
   window.setTimeout(()=>{
     banner.hidden=true;
     img.classList.remove("enemy-hit");
-  },500);
+  },isSpecial?900:500);
+}
+function battleDamage(){
+  if(battleState.finished)return;
+  playBattleHeroAction("damage");
 }
 function battlePlaceCorrect(){
-  battleAttack();
+  battleState.combo+=1;
+  const action=battleState.combo%5===0?"special":"attack";
+  battleAttack(action);
 }
 function battleProblemComplete(){
   if(battleState.finished)return;
   battleState.correct+=1;
+  battleState.combo+=1;
   badgeSystem.correct();
   playRecipe("correct", 0.9);
-  $("#sessionCorrect").textContent="正解 "+battleState.correct;
+  $("#sessionCorrect").textContent="正解 "+battleState.correct+(battleState.combo>1?"　コンボ "+battleState.combo:"");
   battleState.enemyIndex+=1;
   if(battleState.enemyIndex>=battleState.questionTotal){
     finishBattle(true,battleState.mode==="battle"?"バトルクリア！":"タイムアタック終了！");
