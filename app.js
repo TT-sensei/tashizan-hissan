@@ -41,6 +41,7 @@ const GROUP1 = [
   ["pebble-ram","こいしラム"]
 ];
 const BATTLE_RECORD_KEY = "tashizanHissanBattle.v1";
+const BATTLE_SETUP_KEY = "tashizanHissanBattleSetup.v1";
 const battleState = {
   mode:null, heroIndex:null, levelId:null, enemyIndex:0, enemies:[],
   mistakes:0, correct:0, questionTotal:5, startedAt:0, timerId:null,
@@ -51,6 +52,30 @@ const battleHud = $("#battleHud");
 
 function battleRecord(){
   try{return JSON.parse(localStorage.getItem(BATTLE_RECORD_KEY) || "{}")}catch{return {}}
+}
+function battleSetupRecord(){
+  try{
+    return JSON.parse(localStorage.getItem(BATTLE_SETUP_KEY) || "{}");
+  }catch{
+    return {};
+  }
+}
+function saveBattleSetup(){
+  localStorage.setItem(BATTLE_SETUP_KEY,JSON.stringify({
+    mode:battleState.mode,
+    heroIndex:battleState.heroIndex,
+    levelId:battleState.levelId
+  }));
+}
+function loadBattleSetup(){
+  const saved=battleSetupRecord();
+  battleState.mode=saved.mode==="time"?"time":"battle";
+  battleState.heroIndex=Number.isInteger(saved.heroIndex) && saved.heroIndex>=0 && saved.heroIndex<HEROES.length
+    ? saved.heroIndex
+    : 0;
+  battleState.levelId=Number.isInteger(saved.levelId) && LEVELS.some(level=>level.id===saved.levelId)
+    ? saved.levelId
+    : 1;
 }
 function saveBattleRecord(data){localStorage.setItem(BATTLE_RECORD_KEY,JSON.stringify(data))}
 function renderBattleLevelChoice(){
@@ -65,6 +90,7 @@ function renderBattleLevelChoice(){
 }
 function selectBattleLevel(levelId){
   battleState.levelId=levelId;
+  saveBattleSetup();
   const level=LEVELS.find(item=>item.id===levelId);
   $$(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>btn.classList.toggle("selected",Number(btn.dataset.levelId)===levelId));
   $("#selectedBattleLevelLabel").textContent=level?level.name:"";
@@ -83,25 +109,25 @@ function renderCharacterSelect(){
 }
 function selectHero(index){
   battleState.heroIndex=index;
-  $$(".character-pick",$("#characterSelectGrid")).forEach((btn,i)=>btn.classList.toggle("selected",i===index));
+  saveBattleSetup();
+  $(".character-pick",$("#characterSelectGrid")).forEach((btn,i)=>btn.classList.toggle("selected",i===index));
   $("#selectedHeroLabel").textContent=HEROES[index].name+" と いっしょに";
-  $("#battleStartButton").disabled=battleState.mode===null;
+  $("#battleStartButton").disabled=!(battleState.mode && battleState.heroIndex!==null && battleState.levelId!==null);
 }
 function selectBattleMode(mode){
   battleState.mode=mode;
+  saveBattleSetup();
   $$(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===mode));
   $("#battleStartButton").disabled=!(battleState.mode && battleState.heroIndex!==null && battleState.levelId!==null);
 }
 function showBattleSetup(){
-  battleState.mode=null;
-  battleState.heroIndex=null;
-  $$(".mode-card").forEach(btn=>btn.classList.remove("selected"));
-  battleState.levelId=null;
-  $("#battleStartButton").disabled=true;
-  $("#selectedHeroLabel").textContent="えらんでね";
-  $("#selectedBattleLevelLabel").textContent="えらんでね";
+  loadBattleSetup();
   renderBattleLevelChoice();
   renderCharacterSelect();
+  $(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===battleState.mode));
+  $("#selectedHeroLabel").textContent=HEROES[battleState.heroIndex].name+" と いっしょに";
+  $("#selectedBattleLevelLabel").textContent=LEVELS.find(level=>level.id===battleState.levelId)?.name || "";
+  $("#battleStartButton").disabled=false;
   showScreen(homeScreen);
 }
 function chooseEnemyList(){
@@ -283,8 +309,13 @@ function showScreen(screen) {
 }
 
 function renderHome() {
+  loadBattleSetup();
   renderBattleLevelChoice();
   renderCharacterSelect();
+  $(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===battleState.mode));
+  $("#selectedHeroLabel").textContent=HEROES[battleState.heroIndex].name+" と いっしょに";
+  $("#selectedBattleLevelLabel").textContent=LEVELS.find(level=>level.id===battleState.levelId)?.name || "";
+  $("#battleStartButton").disabled=false;
 }
 
 function randomInt(min, max) {
