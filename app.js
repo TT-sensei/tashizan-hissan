@@ -256,7 +256,8 @@ const state = {
   boardCells: [],
   steps: [],
   stepIndex: 0,
-  input: ""
+  input: "",
+  hintVisible: false
 };
 
 const homeScreen = $("#homeScreen");
@@ -618,11 +619,13 @@ function renderCurrentStep() {
 
   const prompt = $("#calculationPrompt");
   const feedback = $("#feedback");
+  prompt.hidden = !state.hintVisible;
 
   feedback.textContent = "";
   feedback.className = "feedback neutral";
 
   if (step.kind === "finish") {
+    prompt.hidden = true;
     $("#answerLabel").textContent = "完成";
     prompt.textContent =
       String(state.problem.a) + "＋" + String(state.problem.b) + "＝" + String(state.problem.sum);
@@ -866,6 +869,7 @@ function startQuestion() {
 
   $("#problemExpression").textContent = String(raw.a) + "＋" + String(raw.b) + "＝";
   hintBox.hidden = true;
+  state.hintVisible = false;
 
   renderBoard(state.problem);
   renderCurrentStep();
@@ -897,6 +901,7 @@ function retryProblem() {
   state.input = "";
   $("#completeOverlay").hidden = true;
   hintBox.hidden = true;
+  state.hintVisible = false;
   renderBoard(state.problem);
   renderCurrentStep();
 }
