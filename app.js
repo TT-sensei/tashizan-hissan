@@ -43,11 +43,11 @@ const GROUP1 = [
 const BATTLE_RECORD_KEY = "tashizanHissanBattle.v1";
 const BATTLE_SETUP_KEY = "tashizanHissanBattleSetup.v1";
 const battleState = {
-  mode:null, heroIndex:null, levelId:null, enemyIndex:0, enemies:[],
+  // 初期値を持たせ、保存データや描画途中の不具合があっても開始条件を失わないようにする。
+  mode:"battle", heroIndex:0, levelId:1, enemyIndex:0, enemies:[],
   mistakes:0, correct:0, questionTotal:5, startedAt:0, timerId:null,
   enemyHp:0, enemyMaxHp:0, finished:false
 };
-const battleSetupScreen = $("#battleSetupScreen");
 const battleHud = $("#battleHud");
 
 function battleRecord(){
@@ -55,7 +55,8 @@ function battleRecord(){
 }
 function battleSetupRecord(){
   try{
-    return JSON.parse(localStorage.getItem(BATTLE_SETUP_KEY) || "{}");
+    const saved=JSON.parse(localStorage.getItem(BATTLE_SETUP_KEY) || "{}");
+    return saved && typeof saved === "object" ? saved : {};
   }catch{
     return {};
   }
@@ -300,7 +301,6 @@ const state = {
 
 const homeScreen = $("#homeScreen");
 const gameScreen = $("#gameScreen");
-const levelGrid = $("#levelGrid");
 const board = $("#board");
 const boardWrap = $("#boardWrap");
 const hintBox = $("#hintBox");
@@ -1003,9 +1003,8 @@ window.addEventListener("orientationchange", () => {
   }, 200);
 });
 
-renderHome();
-
 $("#battleLevelChoice").addEventListener("click",()=>{});
+
 $("#modeChoice").addEventListener("click", event=>{
   const button=event.target.closest("[data-mode]");
   if(button)selectBattleMode(button.dataset.mode);
