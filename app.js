@@ -84,7 +84,8 @@ function renderBattleLevelChoice(){
       '<strong>'+level.short+'</strong><span>'+level.name+'</span>'+
     '</button>'
   ).join("");
-  $$(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>{
+  $(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>{
+    btn.classList.toggle("selected",Number(btn.dataset.levelId)===battleState.levelId);
     btn.addEventListener("click",()=>selectBattleLevel(Number(btn.dataset.levelId)));
   });
 }
@@ -103,7 +104,8 @@ function renderCharacterSelect(){
       '<span>'+hero.name+'</span>'+
     '</button>'
   ).join("");
-  $$(".character-pick",$("#characterSelectGrid")).forEach(btn=>{
+  $(".character-pick",$("#characterSelectGrid")).forEach(btn=>{
+    btn.classList.toggle("selected",Number(btn.dataset.heroIndex)===battleState.heroIndex);
     btn.addEventListener("click",()=>selectHero(Number(btn.dataset.heroIndex)));
   });
 }
