@@ -397,3 +397,18 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
   font-size:17px;
   letter-spacing:2px;
 }
+
+.battle-main-title{
+  margin:0;
+  font-size:clamp(38px,6vw,64px);
+  line-height:1.05;
+  letter-spacing:-.045em;
+  text-align:center;
+}
+.battle-main-lead{
+  margin:8px 0 24px;
+  text-align:center;
+  font-size:clamp(12px,1.7vw,16px);
+  font-weight:750;
+  color:var(--muted);
+}
