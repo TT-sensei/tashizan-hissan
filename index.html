@@ -39,6 +39,35 @@
     </div>
   </main>
 
+  <main id="battleSetupScreen" class="screen">
+    <div class="battle-setup-shell">
+      <p class="eyebrow">たし算バトル</p>
+      <h1>たたかう なかまをえらぼう</h1>
+      <p class="battle-setup-lead">えらんだナビキャラといっしょに、筆算でナビアンをたおそう。</p>
+      <div id="modeChoice" class="mode-choice">
+        <button type="button" class="mode-card" data-mode="battle">
+          <span class="mode-title">⚔️ ふつうのバトル</span>
+          <strong>5問・5体</strong>
+          <small>ミス5回でゲームオーバー</small>
+        </button>
+        <button type="button" class="mode-card" data-mode="time">
+          <span class="mode-title">⏱ タイムアタック</span>
+          <strong>10問</strong>
+          <small>時間と正解数に挑戦</small>
+        </button>
+      </div>
+      <div class="character-select-heading">
+        <span>ナビキャラ</span>
+        <span id="selectedHeroLabel">えらんでね</span>
+      </div>
+      <div id="characterSelectGrid" class="character-select-grid"></div>
+      <div class="battle-setup-actions">
+        <button id="battleStartButton" class="primary-button" type="button" disabled>バトルをはじめる</button>
+        <button id="battleSetupBackButton" class="secondary-button" type="button">もどる</button>
+      </div>
+    </div>
+  </main>
+
   <main id="gameScreen" class="screen">
     <header class="game-topbar">
       <button id="homeButton" class="ghost-button" type="button">← もどる</button>
@@ -47,10 +76,31 @@
         <h1 id="gameTitle">たし算の筆算</h1>
       </div>
       <div class="game-progress">
+        <span id="battleModeLabel">筆算</span>
         <span id="questionProgress">1 / 10</span>
         <span id="sessionCorrect">正解 0</span>
+        <span id="battleTimer" hidden>00:00.0</span>
       </div>
     </header>
+
+    <div id="battleHud" class="battle-hud" hidden>
+      <div class="hero-mini">
+        <img id="heroMini" alt="">
+        <span id="heroMiniName"></span>
+      </div>
+      <div class="battle-center-hud">
+        <div class="battle-hearts" id="battleHearts" aria-label="のこりミス回数">♥ ♥ ♥ ♥ ♥</div>
+        <div class="battle-status" id="battleStatus">ナビアンがあらわれた！</div>
+      </div>
+      <div class="enemy-mini">
+        <img id="enemyMini" alt="">
+        <span id="enemyMiniName"></span>
+        <div class="enemy-hp" aria-hidden="true"><span id="enemyHpFill"></span></div>
+      </div>
+    </div>
+    <div class="battle-field-banner" id="battleFieldBanner" hidden>
+      <span id="battleAttackMessage">こうげき！</span>
+    </div>
 
     <div class="game-layout">
       <section class="work-area" aria-label="筆算">
@@ -96,6 +146,19 @@
     </div>
 
     <div id="hintBox" class="hint-box" hidden></div>
+
+    <div id="battleResultOverlay" class="overlay" hidden>
+      <div class="complete-card battle-result-card">
+        <div id="battleResultMark" class="complete-mark">✓</div>
+        <p id="battleResultKicker" class="complete-kicker">バトル</p>
+        <h2 id="battleResultTitle">クリア！</h2>
+        <p id="battleResultText"></p>
+        <div class="complete-actions">
+          <button id="battleResultAgain" class="primary-button" type="button">もう一度</button>
+          <button id="battleResultHome" class="secondary-button" type="button">ホームへ</button>
+        </div>
+      </div>
+    </div>
 
     <div id="completeOverlay" class="overlay" hidden>
       <div class="complete-card">
