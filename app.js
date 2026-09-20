@@ -84,7 +84,7 @@ function renderBattleLevelChoice(){
       '<strong>'+level.short+'</strong><span>'+level.name+'</span>'+
     '</button>'
   ).join("");
-  $(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>{
+  $$(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>{
     btn.classList.toggle("selected",Number(btn.dataset.levelId)===battleState.levelId);
     btn.addEventListener("click",()=>selectBattleLevel(Number(btn.dataset.levelId)));
   });
@@ -104,7 +104,7 @@ function renderCharacterSelect(){
       '<span>'+hero.name+'</span>'+
     '</button>'
   ).join("");
-  $(".character-pick",$("#characterSelectGrid")).forEach(btn=>{
+  $$(".character-pick",$("#characterSelectGrid")).forEach(btn=>{
     btn.classList.toggle("selected",Number(btn.dataset.heroIndex)===battleState.heroIndex);
     btn.addEventListener("click",()=>selectHero(Number(btn.dataset.heroIndex)));
   });
@@ -112,7 +112,7 @@ function renderCharacterSelect(){
 function selectHero(index){
   battleState.heroIndex=index;
   saveBattleSetup();
-  $(".character-pick",$("#characterSelectGrid")).forEach((btn,i)=>btn.classList.toggle("selected",i===index));
+  $$(".character-pick",$("#characterSelectGrid")).forEach((btn,i)=>btn.classList.toggle("selected",i===index));
   $("#selectedHeroLabel").textContent=HEROES[index].name+" と いっしょに";
   $("#battleStartButton").disabled=!(battleState.mode && battleState.heroIndex!==null && battleState.levelId!==null);
 }
@@ -126,7 +126,7 @@ function showBattleSetup(){
   loadBattleSetup();
   renderBattleLevelChoice();
   renderCharacterSelect();
-  $(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===battleState.mode));
+  $$(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===battleState.mode));
   $("#selectedHeroLabel").textContent=HEROES[battleState.heroIndex].name+" と いっしょに";
   $("#selectedBattleLevelLabel").textContent=LEVELS.find(level=>level.id===battleState.levelId)?.name || "";
   $("#battleStartButton").disabled=false;
@@ -314,7 +314,7 @@ function renderHome() {
   loadBattleSetup();
   renderBattleLevelChoice();
   renderCharacterSelect();
-  $(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===battleState.mode));
+  $$(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===battleState.mode));
   $("#selectedHeroLabel").textContent=HEROES[battleState.heroIndex].name+" と いっしょに";
   $("#selectedBattleLevelLabel").textContent=LEVELS.find(level=>level.id===battleState.levelId)?.name || "";
   $("#battleStartButton").disabled=false;
