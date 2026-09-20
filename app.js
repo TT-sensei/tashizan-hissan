@@ -14,6 +14,10 @@ const SESSION_SIZE = 10;
 
 const NAVI_BASE = "https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/web/";
 const FANTASY_BASE = NAVI_BASE + "fantasy/";
+const BATTLE_BACKGROUNDS = [
+  "grassland", "riverbank", "forest", "ruins",
+  "sea", "sky-island", "volcano", "cave"
+].map(name => "https://tt-sensei.github.io/navi-character-/assets/web/fantasy/backgrounds/" + name + ".webp");
 const HEROES = [
   { id:"riku", name:"りく", image:"riku-ninja" },
   { id:"sora", name:"そら", image:"sora-swordsman" },
@@ -103,6 +107,14 @@ function showBattleSetup(){
 function chooseEnemyList(){
   return [...GROUP1].sort(()=>Math.random()-.5);
 }
+function setBattleBackground(){
+  const background = BATTLE_BACKGROUNDS[Math.floor(Math.random() * BATTLE_BACKGROUNDS.length)];
+  gameScreen.style.backgroundImage =
+    'linear-gradient(rgba(246,249,251,.24),rgba(246,249,251,.34)),url("' + background + '")';
+}
+function resetGameBackground(){
+  gameScreen.style.backgroundImage = "";
+}
 function startBattleMode(){
   if(battleState.mode===null || battleState.heroIndex===null || battleState.levelId===null)return;
   state.level=LEVELS.find(item=>item.id===battleState.levelId);
@@ -117,6 +129,7 @@ function startBattleMode(){
   battleState.startedAt=performance.now();
   battleState.finished=false;
   showScreen(gameScreen);
+  setBattleBackground();
   battleHud.hidden=false;
   $("#battleModeLabel").textContent=battleState.mode==="battle"?"⚔️ バトル":"⏱ タイムアタック";
   $("#battleTimer").hidden=battleState.mode!=="time";
@@ -236,6 +249,7 @@ function endBattleToHome(){
   battleState.timerId=null;
   battleState.mode=null;
   battleHud.hidden=true;
+  resetGameBackground();
   $("#battleResultOverlay").hidden=true;
   showScreen(homeScreen);
   renderHome();
@@ -844,6 +858,7 @@ function startLevel(levelId) {
   battleState.mode=null;
   battleState.finished=false;
   battleHud.hidden=true;
+  resetGameBackground();
   const level = LEVELS.find(item => item.id === levelId);
   if (!level) return;
 
