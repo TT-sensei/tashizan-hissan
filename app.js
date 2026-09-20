@@ -2,10 +2,10 @@ const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 const LEVELS = [
-  { id: 1, short: "LEVEL 1", name: "くり上がりなし", description: "2けた ＋ 2けた\\nくり上がり なし", example: "34＋25", kind: "two-no-carry" },
-  { id: 2, short: "LEVEL 2", name: "一のくらいでくり上がり", description: "2けた ＋ 2けた\\nくり上がり 1回", example: "27＋18", kind: "two-carry-ones" },
-  { id: 3, short: "LEVEL 3", name: "二回のくり上がり", description: "2けた ＋ 2けた\\nくり上がり 2回", example: "68＋57", kind: "two-carry-twice" },
-  { id: 4, short: "LEVEL 4", name: "3けたの筆算", description: "3けた ＋ 3けた\\nくらいをそろえて計算", example: "246＋137", kind: "three-digit" }
+  { id: 1, short: "LEVEL 1", name: "くり上がりなし", description: "2けた ＋ 2けた\nくり上がり なし", example: "34＋25", kind: "two-no-carry" },
+  { id: 2, short: "LEVEL 2", name: "一のくらいでくり上がり", description: "2けた ＋ 2けた\nくり上がり 1回", example: "27＋18", kind: "two-carry-ones" },
+  { id: 3, short: "LEVEL 3", name: "二回のくり上がり", description: "2けた ＋ 2けた\nくり上がり 2回", example: "68＋57", kind: "two-carry-twice" },
+  { id: 4, short: "LEVEL 4", name: "3けたの筆算", description: "3けた ＋ 3けた\nくらいをそろえて計算", example: "246＋137", kind: "three-digit" }
 ];
 
 const SESSION_SIZE = 10;
@@ -41,7 +41,7 @@ function renderHome() {
     return '<button class="level-card" type="button" data-level="' + level.id + '">' +
       '<div><div class="num">' + level.short + '</div>' +
       '<div class="name">' + level.name + '</div>' +
-      '<div class="desc">' + level.description.replaceAll("\\n", "<br>") + '</div></div>' +
+      '<div class="desc">' + level.description.replaceAll("\n", "<br>") + '</div></div>' +
       '<div class="example">' + level.example + '</div></button>';
   }).join("");
 
@@ -100,7 +100,6 @@ function createProblemModel(a, b) {
   const maxDigits = Math.max(aDigits.length, bDigits.length);
   const cols = maxDigits + 1;
   const startCol = cols - maxDigits;
-
   const aFull = Array(cols).fill(0);
   const bFull = Array(cols).fill(0);
 
@@ -119,8 +118,6 @@ function createProblemModel(a, b) {
     const bDigit = bFull[col];
     const carryIn = carry;
     const sum = aDigit + bDigit + carryIn;
-    const resultDigit = sum % 10;
-    const carryOut = Math.floor(sum / 10);
 
     columns[col] = {
       col,
@@ -128,23 +125,13 @@ function createProblemModel(a, b) {
       aDigit,
       bDigit,
       carryIn,
-      resultDigit,
-      carryOut
+      resultDigit: sum % 10,
+      carryOut: Math.floor(sum / 10)
     };
-    carry = carryOut;
+    carry = Math.floor(sum / 10);
   }
 
-  return {
-    a,
-    b,
-    sum: a + b,
-    cols,
-    maxDigits,
-    startCol,
-    aFull,
-    bFull,
-    columns
-  };
+  return { a, b, sum: a + b, cols, maxDigits, startCol, aFull, bFull, columns };
 }
 
 function buildSteps(model) {
@@ -212,7 +199,7 @@ function renderBoard(model) {
   function createRow(className, rowIndex) {
     for (let col = 0; col < model.cols; col += 1) {
       const cell = document.createElement("div");
-      cell.className = "cell " + className;
+      cell.className = "cell " + className + (col === model.cols - 1 ? " last-col" : "");
       cell.dataset.row = String(rowIndex);
       cell.dataset.col = String(col);
       cell.setAttribute("role", "gridcell");
@@ -287,9 +274,7 @@ function updateBoardVisuals() {
   }
 
   for (let col = modelStartCol(); col < state.problem.cols; col += 1) {
-    if (hasCompletedColumn(col)) {
-      getCell(3, col)?.classList.add("done");
-    }
+    if (hasCompletedColumn(col)) getCell(3, col)?.classList.add("done");
   }
 
   updateColumnGuide();
@@ -413,7 +398,7 @@ function handlePadKey(key) {
     return;
   }
 
-  if (/^\\d$/.test(key) && state.input.length === 0) {
+  if (/^\d$/.test(key) && state.input.length === 0) {
     state.input = key;
     renderCurrentStep();
   }
@@ -494,7 +479,7 @@ function completeProblem() {
   const overlay = $("#completeOverlay");
   $("#completeTitle").textContent = String(model.a) + "＋" + String(model.b) + "＝" + String(model.sum);
   $("#completeText").textContent =
-    "右のくらいから順に、筆算を完成させました。\\n今回の正解：" + state.sessionCorrect + "問";
+    "右のくらいから順に、筆算を完成させました。\n今回の正解：" + state.sessionCorrect + "問";
   $("#nextButton").textContent =
     state.questionIndex + 1 < SESSION_SIZE ? "つぎの問題" : "レベルをクリア";
   overlay.hidden = false;
