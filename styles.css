@@ -248,3 +248,14 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 .battle-level-pick strong{font-size:18px}.battle-level-pick span{font-weight:800;font-size:13px}
 .battle-level-pick.selected{border-color:var(--accent);background:#f2f7fb;box-shadow:0 0 0 2px rgba(45,108,168,.08)}
 @media(max-width:700px){.battle-level-choice{grid-template-columns:repeat(2,1fr)}}
+
+.battle-stage{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:18px;min-height:145px;margin:0 0 12px;padding:10px 20px 4px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#fff,#f7f9fb);overflow:hidden}
+.battle-fighter,.battle-enemy{display:flex;flex-direction:column;align-items:center;justify-content:end;min-width:0}
+.battle-stage img{height:118px;width:118px;object-fit:contain;filter:drop-shadow(0 5px 4px rgba(0,0,0,.12))}
+.battle-stage span{font-weight:900;font-size:14px;line-height:1.2;margin-top:-2px}
+.battle-stage-center{align-self:center;text-align:center;min-width:90px}
+.battle-vs{font-size:18px;font-weight:1000;letter-spacing:.08em}
+.battle-place-progress{margin-top:7px;padding:5px 9px;border-radius:999px;background:#eef3f7;font-size:12px;font-weight:800;white-space:nowrap}
+.battle-stage .enemy-hit{animation:battle-hit .45s ease}
+@keyframes battle-hit{0%,100%{transform:translateX(0) rotate(0) scale(1)}25%{transform:translateX(9px) rotate(5deg) scale(.94)}55%{transform:translateX(-7px) rotate(-4deg) scale(1.02)}}
+@media(max-width:700px){.battle-stage{min-height:120px;gap:8px;padding:7px 10px}.battle-stage img{width:88px;height:88px}.battle-stage span{font-size:12px}.battle-stage-center{min-width:72px}.battle-place-progress{font-size:11px}}
