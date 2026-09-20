@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f3f6f9">
+  <title>たし算の筆算｜学ぶ・できる</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main id="homeScreen" class="screen active">
+    <div class="home-shell">
+      <header class="home-header">
+        <p class="eyebrow">筆算を ひとつずつ</p>
+        <h1>たし算の筆算</h1>
+        <p class="lead">右のくらいから順に、たして、書いて、くり上げよう。</p>
+      </header>
+
+      <section class="level-section" aria-labelledby="levelTitle">
+        <div class="section-title">
+          <div>
+            <p class="section-kicker">LEVEL</p>
+            <h2 id="levelTitle">れんしゅうするところをえらぼう</h2>
+          </div>
+          <div class="home-record" aria-label="記録">
+            <span>正解</span>
+            <strong id="homeCorrect">0</strong>
+            <span>問</span>
+          </div>
+        </div>
+        <div id="levelGrid" class="level-grid"></div>
+      </section>
+
+      <section class="how-section" aria-label="筆算の流れ">
+        <div class="flow">
+          <span>右から</span><i>→</i><span>たす</span><i>→</i><span>書く</span><i>→</i><span>くり上げる</span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <main id="gameScreen" class="screen">
+    <header class="game-topbar">
+      <button id="homeButton" class="ghost-button" type="button">← もどる</button>
+      <div class="game-title-wrap">
+        <span id="gameLevelLabel" class="level-badge"></span>
+        <h1 id="gameTitle">たし算の筆算</h1>
+      </div>
+      <div class="game-progress">
+        <span id="questionProgress">1 / 10</span>
+        <span id="sessionCorrect">正解 0</span>
+      </div>
+    </header>
+
+    <div class="game-layout">
+      <section class="work-area" aria-label="筆算">
+        <div class="problem-card">
+          <div class="problem-meta">
+            <span id="problemLabel">問題</span>
+            <span id="problemExpression" class="problem-expression"></span>
+          </div>
+
+          <div id="boardWrap" class="board-wrap">
+            <div id="board" class="board" role="grid" aria-label="筆算のます"></div>
+            <div class="column-guide" aria-hidden="true"></div>
+          </div>
+
+          <div class="work-actions">
+            <button id="retryButton" class="secondary-button" type="button">この問題をやりなおす</button>
+            <button id="hintButton" class="secondary-button" type="button">ヒント</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="learning-panel" aria-label="学習パネル">
+        <div class="step-rail" id="stepRail">
+          <span class="step-pill active">① たす</span>
+          <span class="step-pill">② 答えを書く</span>
+          <span class="step-pill">③ くり上げる</span>
+        </div>
+
+        <div class="instruction-card">
+          <p class="instruction-kicker">いま すること</p>
+          <h2 id="instructionTitle">右からたそう</h2>
+          <p id="instructionText" class="instruction-text">一のくらいの数字をたします。</p>
+          <div id="calculationPrompt" class="calculation-prompt"></div>
+          <div id="feedback" class="feedback" aria-live="polite"></div>
+        </div>
+
+        <div class="answer-area">
+          <div class="answer-label">こたえを入力</div>
+          <div id="answerDisplay" class="answer-display" aria-live="polite">＿</div>
+          <div id="numberPad" class="number-pad" aria-label="数字キーパッド"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="hintBox" class="hint-box" hidden></div>
+
+    <div id="completeOverlay" class="overlay" hidden>
+      <div class="complete-card">
+        <div class="complete-mark">✓</div>
+        <p class="complete-kicker">できた</p>
+        <h2 id="completeTitle">筆算ができました</h2>
+        <p id="completeText"></p>
+        <div class="complete-actions">
+          <button id="nextButton" class="primary-button" type="button">つぎの問題</button>
+          <button id="finishButton" class="secondary-button" type="button">レベルにもどる</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
