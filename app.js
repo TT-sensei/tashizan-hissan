@@ -333,18 +333,41 @@ function updateColumnGuide() {
 
 function updateStepRail() {
   const current = state.steps[state.stepIndex];
-  const pills = $$(".step-pill");
-  pills.forEach(pill => pill.classList.remove("active", "done"));
+  const pills = $(".step-pill");
+  pills.forEach(pill => {
+    pill.classList.remove("active", "done");
+    pill.hidden = false;
+  });
 
   if (!current) return;
 
+  // LEVEL 1は、くり上がり確認を行わない2段階表示にする。
+  if (state.level?.id === 1) {
+    pills[0].textContent = "① 計算する";
+    pills[1].textContent = "② 答えを書く";
+    pills[2].hidden = true;
+
+    if (current.kind === "sum-input") {
+      pills[0].classList.add("done");
+      pills[1].classList.add("active");
+    } else {
+      pills[0].classList.add("done");
+      pills[1].classList.add("done");
+    }
+    return;
+  }
+
+  pills[0].textContent = "① 計算する";
+  pills[1].textContent = "② くり上がり？";
+  pills[2].textContent = "③ 答えを書く";
+
   if (current.kind === "carry-check") {
-    pills[0]?.classList.add("done");
-    pills[1]?.classList.add("active");
+    pills[0].classList.add("done");
+    pills[1].classList.add("active");
   } else if (current.kind === "sum-input") {
-    pills[0]?.classList.add("done");
-    pills[1]?.classList.add("done");
-    pills[2]?.classList.add("active");
+    pills[0].classList.add("done");
+    pills[1].classList.add("done");
+    pills[2].classList.add("active");
   } else {
     pills.forEach(pill => pill.classList.add("done"));
   }
@@ -364,17 +387,22 @@ function renderCurrentStep() {
   feedback.className = "feedback neutral";
 
   if (step.kind === "finish") {
+    $("#answerLabel").textContent = "完成";
     prompt.textContent =
       String(state.problem.a) + "＋" + String(state.problem.b) + "＝" + String(state.problem.sum);
     $("#answerDisplay").textContent = "✓";
     $("#answerDisplay").style.borderColor = "#67b78d";
     $("#answerDisplay").style.background = "#effaf4";
   } else if (step.kind === "carry-check") {
+    $("#answerLabel").textContent = "くり上がりを選ぶ";
     prompt.textContent = step.expression;
     $("#answerDisplay").textContent = "ある？ なし？";
     $("#answerDisplay").style.borderColor = "";
     $("#answerDisplay").style.background = "";
   } else {
+    $("#answerLabel").textContent = step.requiresCarry
+      ? "2けたの答えを入力"
+      : "答えを入力";
     prompt.textContent = step.expression + "＝";
     $("#answerDisplay").textContent = state.input || "＿";
     $("#answerDisplay").style.borderColor = "";
