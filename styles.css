@@ -691,3 +691,11 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
   .badge-card small{font-size:9px}
   .badge-entry-button{flex-direction:column;gap:2px}
 }
+
+.badge-page-card{width:min(980px,calc(100% - 28px));height:min(90svh,820px);margin:auto}
+#badgeScreen{padding:14px;align-items:center;justify-content:center;background:#f3f6f9}
+#badgeScreen .badge-collection-grid{flex:1;min-height:0}
+@media(max-width:600px){
+  #badgeScreen{padding:8px}
+  .badge-page-card{width:100%;height:calc(100svh - 16px);border-radius:18px}
+}
