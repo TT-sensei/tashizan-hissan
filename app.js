@@ -146,10 +146,16 @@ function setupBattleEnemy(){
   battleState.enemyHp=state.problem.maxDigits;
   battleState.enemyMaxHp=state.problem.maxDigits;
   const hero=HEROES[battleState.heroIndex];
-  $("#heroMini").src=FANTASY_BASE+hero.image+".webp";
+  const heroSrc=FANTASY_BASE+hero.image+".webp";
+  const enemySrc=FANTASY_BASE+"monsters/zako/"+enemy[0]+".webp";
+  $("#heroMini").src=heroSrc;
   $("#heroMiniName").textContent=hero.name;
-  $("#enemyMini").src=FANTASY_BASE+"monsters/zako/"+enemy[0]+".webp";
+  $("#enemyMini").src=enemySrc;
   $("#enemyMiniName").textContent=enemy[1];
+  $("#heroBattleImage").src=heroSrc;
+  $("#heroBattleName").textContent=hero.name;
+  $("#enemyBattleImage").src=enemySrc;
+  $("#enemyBattleName").textContent=enemy[1];
   $("#battleStatus").textContent=(battleState.enemyIndex+1)+"体目のナビアン！";
   updateBattleHud();
 }
@@ -157,6 +163,8 @@ function updateBattleHud(){
   const hearts=Array.from({length:5},(_,i)=>i<battleState.mistakes?"♡":"♥").join(" ");
   $("#battleHearts").textContent=hearts;
   $("#enemyHpFill").style.width=Math.max(0,(battleState.enemyHp/battleState.enemyMaxHp)*100)+"%";
+  const remain=Math.max(0,battleState.enemyHp);
+  $("#battlePlaceProgress").textContent=remain>0?"あと "+remain+" くらい":"たおした！";
 }
 function registerBattleMistake(){
   if(battleState.finished || !battleState.mode)return;
@@ -173,7 +181,8 @@ function battleAttack(){
   $("#battleAttackMessage").textContent="こうげき！";
   banner.hidden=false;
   banner.classList.remove("attack-pop"); void banner.offsetWidth; banner.classList.add("attack-pop");
-  const img=$("#enemyMini"); img.classList.remove("enemy-hit"); void img.offsetWidth; img.classList.add("enemy-hit");
+  const img=$("#enemyBattleImage");
+  img.classList.remove("enemy-hit"); void img.offsetWidth; img.classList.add("enemy-hit");
   updateBattleHud();
   window.setTimeout(()=>{
     banner.hidden=true;
