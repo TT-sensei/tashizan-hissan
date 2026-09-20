@@ -259,3 +259,25 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 .battle-stage .enemy-hit{animation:battle-hit .45s ease}
 @keyframes battle-hit{0%,100%{transform:translateX(0) rotate(0) scale(1)}25%{transform:translateX(9px) rotate(5deg) scale(.94)}55%{transform:translateX(-7px) rotate(-4deg) scale(1.02)}}
 @media(max-width:700px){.battle-stage{min-height:120px;gap:8px;padding:7px 10px}.battle-stage img{width:88px;height:88px}.battle-stage span{font-size:12px}.battle-stage-center{min-width:72px}.battle-place-progress{font-size:11px}}
+
+/* battle layout: characters flank a compact written-calculation board */
+.battle-game-layout{grid-template-columns:110px minmax(300px,520px) 110px minmax(280px,360px);align-items:stretch;gap:12px}
+.battle-game-layout .work-area{min-width:0}
+.battle-game-layout .problem-card{padding:16px}
+.battle-side{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-width:0}
+.battle-side img{width:92px;height:120px;object-fit:contain;filter:drop-shadow(0 5px 4px rgba(0,0,0,.12))}
+.battle-side strong{font-size:14px}
+.battle-side-right{padding-top:8px}
+.battle-side-hp{width:82px}
+.battle-side-right .battle-place-progress{font-size:11px;margin-top:3px}
+.battle-game-layout .board-wrap{transform:scale(.88);transform-origin:center top;margin-bottom:-22px}
+.battle-game-layout .problem-expression{font-size:24px}
+.battle-hud{display:flex;justify-content:center;align-items:center;gap:24px;min-height:38px;margin-bottom:6px}
+.battle-hud .battle-status{font-weight:900;font-size:13px}
+.battle-hud .battle-hearts{font-size:16px;letter-spacing:2px}
+.battle-timer{font-variant-numeric:tabular-nums;font-weight:900}
+@media(max-width:900px){
+ .battle-game-layout{grid-template-columns:72px minmax(230px,1fr) 72px minmax(250px,310px);gap:8px}
+ .battle-side img{width:62px;height:90px}
+ .battle-game-layout .board-wrap{transform:scale(.82);margin-bottom:-30px}
+}
