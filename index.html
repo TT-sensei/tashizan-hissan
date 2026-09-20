@@ -97,40 +97,23 @@
     </header>
 
     <div id="battleHud" class="battle-hud" hidden>
-      <div class="hero-mini">
-        <img id="heroMini" alt="">
-        <span id="heroMiniName"></span>
-      </div>
       <div class="battle-center-hud">
         <div class="battle-hearts" id="battleHearts" aria-label="のこりミス回数">♥ ♥ ♥ ♥ ♥</div>
         <div class="battle-status" id="battleStatus">ナビアンがあらわれた！</div>
       </div>
-      <div class="enemy-mini">
-        <img id="enemyMini" alt="">
-        <span id="enemyMiniName"></span>
-        <div class="enemy-hp" aria-hidden="true"><span id="enemyHpFill"></span></div>
-      </div>
+      <div class="battle-timer" id="battleTimer" aria-live="polite"></div>
     </div>
+
     <div class="battle-field-banner" id="battleFieldBanner" hidden>
       <span id="battleAttackMessage">こうげき！</span>
     </div>
 
-    <section class="battle-stage" aria-label="バトル">
-      <div class="battle-fighter">
+    <div class="game-layout battle-game-layout">
+      <aside class="battle-side battle-side-left">
         <img id="heroBattleImage" alt="">
-        <span id="heroBattleName"></span>
-      </div>
-      <div class="battle-stage-center">
-        <div class="battle-vs">VS</div>
-        <div id="battlePlaceProgress" class="battle-place-progress">あと 2 くらい</div>
-      </div>
-      <div class="battle-enemy">
-        <img id="enemyBattleImage" alt="">
-        <span id="enemyBattleName"></span>
-      </div>
-    </section>
+        <strong id="heroBattleName"></strong>
+      </aside>
 
-    <div class="game-layout">
       <section class="work-area" aria-label="筆算">
         <div class="problem-card">
           <div class="problem-meta">
@@ -150,13 +133,19 @@
         </div>
       </section>
 
+      <aside class="battle-side battle-side-right">
+        <img id="enemyBattleImage" alt="">
+        <strong id="enemyBattleName"></strong>
+        <div class="enemy-hp battle-side-hp"><span id="enemyHpFill"></span></div>
+        <div id="battlePlaceProgress" class="battle-place-progress">あと 2 くらい</div>
+      </aside>
+
       <aside class="learning-panel" aria-label="学習パネル">
         <div class="step-rail" id="stepRail">
           <span class="step-pill active">① たす</span>
           <span class="step-pill">② くり上がり？</span>
           <span class="step-pill">③ 答えを書く</span>
         </div>
-
         <div class="instruction-card">
           <p class="instruction-kicker">いま すること</p>
           <h2 id="instructionTitle">右からたそう</h2>
@@ -164,7 +153,6 @@
           <div id="calculationPrompt" class="calculation-prompt"></div>
           <div id="feedback" class="feedback" aria-live="polite"></div>
         </div>
-
         <div class="answer-area">
           <div id="answerLabel" class="answer-label">こたえを入力</div>
           <div id="answerDisplay" class="answer-display" aria-live="polite">＿</div>
