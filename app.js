@@ -1012,3 +1012,5 @@ $("#modeChoice").addEventListener("click", event=>{
 $("#battleStartButton").addEventListener("click",startBattleMode);
 $("#battleResultAgain").addEventListener("click",startAgainBattle);
 $("#battleResultHome").addEventListener("click",endBattleToHome);
+
+renderHome();
