@@ -136,6 +136,7 @@ function createProblemModel(a, b) {
 
 function buildSteps(model) {
   const steps = [];
+  const alwaysCheckCarry = state.level && state.level.id >= 2;
 
   for (let col = model.cols - 1; col >= model.startCol; col -= 1) {
     const data = model.columns[col];
@@ -144,21 +145,23 @@ function buildSteps(model) {
       ? String(data.aDigit) + "＋" + String(data.bDigit) + "＋1"
       : String(data.aDigit) + "＋" + String(data.bDigit);
 
-    steps.push({
-      kind: "carry-check",
-      col,
-      title: place + "の くり上がりは？",
-      text: data.carryIn > 0
-        ? "まず、このくらいをたして、くり上がりがあるか考えよう。"
-        : "まず、このくらいをたして、くり上がりがあるか考えよう。",
-      expression,
-      answer: data.carryOut > 0 ? "yes" : "no"
-    });
+    // LEVEL 2以上は、くり上がりの有無を必ず判断してから答えを書く。
+    // 「ある／なし」を毎回入れることで、くり上がりを意識する習慣をつくる。
+    if (alwaysCheckCarry) {
+      steps.push({
+        kind: "carry-check",
+        col,
+        title: place + "の くり上がりは？",
+        text: "まず計算して、10以上になるか考えよう。",
+        expression,
+        answer: data.carryOut > 0 ? "yes" : "no"
+      });
+    }
 
     steps.push({
       kind: "sum-input",
       col,
-      title: place + "の答えは？",
+      title: place + "の答えを書く",
       text: data.carryOut > 0
         ? "10以上になったら、答えを2けたで入力しよう。"
         : "計算した答えを入力しよう。",
@@ -175,12 +178,11 @@ function buildSteps(model) {
   steps.push({
     kind: "finish",
     title: "筆算のできあがり",
-    text: "右から順に、たして、くり上がりを考えて、答えを書くことができました。"
+    text: "右のくらいから順に、たして、くり上がりを考えて、答えを書くことができました。"
   });
 
   return steps;
 }
-
 function placeName(index) {
   return ["一のくらい", "十のくらい", "百のくらい", "千のくらい"][index] || "このくらい";
 }
@@ -370,7 +372,7 @@ function renderKeypad() {
   if (step.kind === "carry-check") {
     pad.innerHTML =
       '<div class="carry-choice-wrap">' +
-        '<p class="carry-choice-label">くり上がりはある？</p>' +
+        '<p class="carry-choice-label">くり上がりはある？ なし？</p>' +
         '<div class="carry-choice-buttons">' +
           '<button type="button" class="choice-button carry-yes" data-choice="yes">ある</button>' +
           '<button type="button" class="choice-button carry-no" data-choice="no">なし</button>' +
