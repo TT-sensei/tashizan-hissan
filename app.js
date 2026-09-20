@@ -369,8 +369,13 @@ function renderKeypad() {
 
   if (step.kind === "carry-check") {
     pad.innerHTML =
-      '<button type="button" class="choice-button carry-yes" data-choice="yes">ある</button>' +
-      '<button type="button" class="choice-button carry-no" data-choice="no">なし</button>';
+      '<div class="carry-choice-wrap">' +
+        '<p class="carry-choice-label">くり上がりはある？</p>' +
+        '<div class="carry-choice-buttons">' +
+          '<button type="button" class="choice-button carry-yes" data-choice="yes">ある</button>' +
+          '<button type="button" class="choice-button carry-no" data-choice="no">なし</button>' +
+        '</div>' +
+      '</div>';
     return;
   }
 
