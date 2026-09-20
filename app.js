@@ -274,7 +274,7 @@ function modelStartCol() {
 }
 
 function hasCompletedColumn(col) {
-  return state.steps.slice(0, state.stepIndex + 1).some(step =>
+  return state.steps.slice(0, state.stepIndex).some(step =>
     step.kind === "sum-input" && step.col === col
   );
 }
