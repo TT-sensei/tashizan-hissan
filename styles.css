@@ -87,3 +87,121 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
   .carry-choice-label{font-size:12px;margin-bottom:5px}
   .carry-choice-buttons{gap:6px}
 }
+
+
+/* EDU-KIT UI layer: 学習内容を主役にした、落ち着いたタブレット向け表示 */
+.home-header h1{
+  font-weight:850;
+  letter-spacing:-.02em;
+}
+.home-header .lead{
+  max-width:760px;
+  margin-inline:auto;
+}
+.level-section{
+  box-shadow:0 4px 18px rgba(32,55,74,.05);
+}
+.level-card{
+  min-height:154px;
+  border-color:#d3dee7;
+  background:#fff;
+}
+.level-card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 5px 14px rgba(32,55,74,.07);
+  border-color:#aebfce;
+}
+.level-card:focus-visible{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(45,108,168,.14);
+}
+.level-card .name{
+  font-weight:850;
+}
+.game-topbar{
+  box-shadow:0 1px 0 rgba(24,48,71,.02);
+}
+.work-area{
+  background:#f3f6f9;
+}
+.problem-card{
+  box-shadow:0 5px 20px rgba(32,55,74,.055);
+}
+.problem-meta #problemLabel{
+  letter-spacing:.04em;
+}
+.board{
+  box-shadow:0 3px 12px rgba(24,48,71,.05);
+}
+.cell.focus{
+  box-shadow:inset 0 0 0 3px var(--focus-line);
+}
+.learning-panel{
+  background:#f6f9fb;
+}
+.step-pill{
+  border:1px solid transparent;
+  min-height:34px;
+  display:grid;
+  place-items:center;
+}
+.step-pill.active{
+  border-color:#e0c34d;
+  box-shadow:0 1px 4px rgba(92,78,12,.08);
+}
+.instruction-card{
+  box-shadow:0 3px 12px rgba(32,55,74,.045);
+}
+.instruction-card h2{
+  letter-spacing:-.02em;
+}
+.calculation-prompt{
+  border:1px solid #dce7ee;
+  background:#f1f6fa;
+}
+.answer-area{
+  padding-top:2px;
+}
+.answer-label{
+  letter-spacing:.04em;
+}
+.answer-display{
+  box-shadow:0 2px 8px rgba(32,55,74,.04);
+}
+.pad-button,
+.choice-button{
+  transition:transform .08s ease,box-shadow .08s ease,border-color .12s ease,background .12s ease;
+}
+.pad-button:hover,
+.choice-button:hover{
+  transform:translateY(-1px);
+}
+.pad-button:focus-visible,
+.choice-button:focus-visible,
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.ghost-button:focus-visible{
+  outline:3px solid #7aa6cf;
+  outline-offset:2px;
+}
+.hint-box{
+  border-color:#d9c96e;
+  box-shadow:0 6px 18px rgba(32,55,74,.11);
+}
+.complete-card{
+  box-shadow:0 14px 40px rgba(15,30,45,.2);
+}
+@media (prefers-reduced-motion: reduce){
+  *,
+  *::before,
+  *::after{
+    scroll-behavior:auto !important;
+    transition:none !important;
+    animation:none !important;
+  }
+  .level-card:hover,
+  .pad-button:hover,
+  .choice-button:hover{
+    transform:none;
+  }
+}
