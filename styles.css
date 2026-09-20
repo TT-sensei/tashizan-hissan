@@ -48,11 +48,11 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 .work-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 .learning-panel{min-height:0;background:#f8fafc;border-left:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:12px;overflow:visible}
 .step-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.step-pill{padding:8px 6px;border-radius:999px;background:#edf1f5;color:#7c8a97;text-align:center;font-size:12px;font-weight:900}.step-pill.active{background:var(--focus);color:#5c4e0c}.step-pill.done{background:var(--correct);color:#286946}
-.instruction-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;min-height:166px;display:flex;flex-direction:column;justify-content:center}
+.instruction-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;min-height:0;display:flex;flex-direction:column;justify-content:center;flex-shrink:1}
 .instruction-card h2{margin:0;font-size:clamp(22px,3vw,31px)}.instruction-text{margin:7px 0 0;color:var(--muted);font-size:14px;line-height:1.55;font-weight:700}
 .calculation-prompt{margin-top:13px;border-radius:13px;background:#edf4f9;padding:10px 12px;font-size:clamp(24px,4vw,34px);font-weight:900;letter-spacing:.06em;text-align:center;min-height:54px;display:flex;align-items:center;justify-content:center}
 .feedback{min-height:24px;margin-top:9px;font-size:14px;font-weight:900}.feedback.good{color:#28734f}.feedback.bad{color:#b44545}.feedback.neutral{color:var(--muted)}
-.answer-area{min-height:0;display:flex;flex-direction:column;overflow:visible}.answer-label{font-size:12px;color:var(--muted);font-weight:900;margin-bottom:6px}
+.answer-area{min-height:0;display:flex;flex-direction:column;overflow:visible;flex-shrink:0}.answer-label{font-size:12px;color:var(--muted);font-weight:900;margin-bottom:6px}
 .answer-display{min-height:56px;border:2px dashed #a5b4c1;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;letter-spacing:.12em;margin-bottom:10px}
 .number-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;flex-shrink:0;min-height:0;overflow:visible}.choice-button{border:0;border-radius:14px;min-height:62px;font-size:24px;font-weight:900;box-shadow:0 3px 0 #ccd6df}.choice-button.carry-yes{background:#e8f4fb;color:#245b82}.choice-button.carry-no{background:#eef1f4;color:#536574}.pad-button{border:0;border-radius:12px;background:#fff;color:var(--ink);min-height:50px;font-size:22px;box-shadow:0 2px 0 #ccd6df}.pad-button:active{transform:translateY(1px);box-shadow:none}.pad-button.function{background:#e8eef3;color:#526675;font-size:17px}.pad-button.submit{background:var(--accent);color:#fff;box-shadow:0 3px 0 var(--accent-dark)}.pad-button.submit:active{box-shadow:0 1px 0 var(--accent-dark)}
 .hint-box{position:fixed;right:calc(min(33vw,440px) + 18px);bottom:18px;z-index:20;width:min(390px,calc(100vw - 36px));padding:13px 15px;background:#fffdf0;border:1px solid #e4d37c;border-radius:14px;box-shadow:0 8px 22px rgba(32,55,74,.14);font-size:13px;font-weight:800;line-height:1.55}
@@ -64,3 +64,17 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 @media (orientation:portrait){body{overflow:auto}.game-layout{grid-template-columns:1fr;grid-template-rows:minmax(360px,1fr) auto}.work-area{min-height:420px}.learning-panel{border-left:0;border-top:1px solid var(--line);overflow:visible}.hint-box{right:18px;bottom:18px}}
 @media (max-width:600px){#homeScreen{padding:14px}.home-shell{gap:16px}.level-section{padding:14px;border-radius:18px}.level-grid{gap:8px}.level-card{min-height:145px;padding:13px}.level-card .name{font-size:17px}.level-card .desc{font-size:12px}.section-title{align-items:center}.flow{font-size:12px;gap:8px}.game-topbar{grid-template-columns:auto 1fr auto;min-height:58px}.game-title-wrap{justify-content:flex-start}.game-title-wrap h1{font-size:16px}.game-progress{font-size:11px;gap:6px;flex-direction:column;align-items:flex-end}.work-area{padding:10px;min-height:350px}.problem-card{padding:12px;border-radius:18px}.learning-panel{padding:12px}.board{--cell:clamp(64px,18vw,88px)}.work-actions .secondary-button{font-size:13px;padding:9px 11px}}
 @media (max-width:430px){.level-grid{grid-template-columns:1fr}.level-card{min-height:120px}.home-record{font-size:11px}.home-record strong{font-size:22px}.step-rail{grid-template-columns:1fr 1fr}.step-pill:nth-child(3){grid-column:1/-1}.number-pad{gap:6px}.pad-button{min-height:46px}}
+
+@media (max-height:760px) and (orientation:landscape){
+  .game-topbar{min-height:54px;padding:5px 10px}
+  .learning-panel{padding:10px;gap:7px}
+  .instruction-card{padding:10px}
+  .instruction-card h2{font-size:21px}
+  .instruction-text{font-size:12px}
+  .calculation-prompt{margin-top:7px;min-height:44px;padding:6px 10px;font-size:25px}
+  .feedback{min-height:18px;margin-top:5px;font-size:12px}
+  .answer-display{min-height:44px;font-size:27px;margin-bottom:6px}
+  .choice-button{min-height:48px;font-size:21px}
+  .pad-button{min-height:40px;font-size:19px}
+  .number-pad{gap:5px}
+}
