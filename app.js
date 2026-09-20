@@ -1,26 +1,38 @@
-import { soundList } from "https://tt-sensei.github.io/sounds-recipe-/sounds.js";
 import { badgeSystem } from "./badges.js";
 const $ = (selector, root = document) => root.querySelector(selector);
 
 let soundContext = null;
 let soundEnabled = true;
 
-function playSound(id, volume = 0.22) {
+function playRecipe(id, volume = 0.22) {
   if (!soundEnabled) return;
-  const recipe = soundList.find(item => item.id === id);
-  if (!recipe) return;
   try {
-    if (!soundContext) {
-      soundContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    if (!soundContext) soundContext = new (window.AudioContext || window.webkitAudioContext)();
     if (soundContext.state === "suspended") soundContext.resume();
-    recipe.play(soundContext, volume);
-  } catch {
-    // 音が使えない環境でも教材の操作は止めない。
-  }
+    const now = soundContext.currentTime;
+    const tone = (f, t, d, type, level) => {
+      const o = soundContext.createOscillator();
+      const g = soundContext.createGain();
+      o.type = type;
+      o.frequency.value = f;
+      g.gain.setValueAtTime(level * volume, now + t);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + t + d);
+      o.connect(g).connect(soundContext.destination);
+      o.start(now + t);
+      o.stop(now + t + d);
+    };
+    const recipes = {
+      correct: () => { tone(659,0,.22,"sine",.28); tone(880,.1,.45,"sine",.25); },
+      wrong: () => { tone(220,0,.35,"triangle",.25); tone(145,.18,.44,"triangle",.23); },
+      decide: () => { tone(440,0,.14,"square",.16); tone(660,.12,.2,"square",.16); },
+      clear: () => [523,659,784,1047].forEach((f,i)=>tone(f,i*.12,.7,"sine",.2)),
+      practice: () => { tone(523,0,.2,"triangle",.16); tone(659,.14,.2,"triangle",.16); tone(784,.28,.42,"triangle",.18); },
+      stageClear: () => { tone(392,0,.18,"triangle",.14); tone(523,.13,.18,"triangle",.15); tone(659,.26,.18,"triangle",.16); tone(784,.39,.85,"triangle",.19); },
+      gameover: () => { tone(392,0,.22,"triangle",.12); tone(330,.18,.22,"triangle",.12); tone(262,.36,.5,"triangle",.14); }
+    };
+    recipes[id]?.();
+  } catch {}
 }
-const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-
 const LEVELS = [
   { id: 1, short: "LEVEL 1", name: "くり上がりなし", description: "2けた ＋ 2けた\nくり上がり なし", example: "34＋25", kind: "two-no-carry" },
   { id: 2, short: "LEVEL 2", name: "一のくらいでくり上がり", description: "2けた ＋ 2けた\nくり上がり 1回", example: "27＋18", kind: "two-carry-ones" },
@@ -228,6 +240,7 @@ function registerBattleMistake(){
   if(battleState.finished || !battleState.mode)return;
   battleState.mistakes=Math.min(5,battleState.mistakes+1);
   badgeSystem.mistake();
+  playRecipe("wrong", 0.9);
   updateBattleHud();
   if(battleState.mode==="battle" && battleState.mistakes>=5){
     finishBattle(false,"ゲームオーバー");
@@ -255,6 +268,7 @@ function battleProblemComplete(){
   if(battleState.finished)return;
   battleState.correct+=1;
   badgeSystem.correct();
+  playRecipe("correct", 0.9);
   $("#sessionCorrect").textContent="正解 "+battleState.correct;
   battleState.enemyIndex+=1;
   if(battleState.enemyIndex>=battleState.questionTotal){
@@ -782,6 +796,7 @@ function handleCarryChoice(choice) {
     return;
   }
 
+  playRecipe("decide", 0.65);
   setFeedback(
     choice === "yes"
       ? "くり上がりあり。答えを2けたで入力しよう。"
@@ -947,7 +962,7 @@ function nextQuestion() {
 
 function finishLevel() {
   $("#completeOverlay").hidden = true;
-  playSound("practice", 0.2);
+  playRecipe("practice", 0.85);
   showScreen(homeScreen);
   renderHome();
 }
