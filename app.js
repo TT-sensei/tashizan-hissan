@@ -905,22 +905,12 @@ function showHint() {
   const step = state.steps[state.stepIndex];
   if (!step || step.kind === "finish") return;
 
-  let message = "";
-
-  if (step.kind === "carry-check") {
-    message = "くらいの数字をたしてみよう。10以上になったら「ある」です。";
-  } else if (step.kind === "sum-input" && step.requiresCarry) {
-    message = "10以上になったときは、答えを2けたで入力します。たとえば 9＋4 なら 13 です。";
-  } else {
-    message = "右のくらいから計算します。今光っているくらいの答えを入力します。";
-  }
-
-  hintBox.textContent = message;
-  hintBox.hidden = false;
-  window.clearTimeout(showHint.timer);
-  showHint.timer = window.setTimeout(() => {
-    hintBox.hidden = true;
-  }, 4500);
+  state.hintVisible = true;
+  const prompt = $("#calculationPrompt");
+  prompt.hidden = false;
+  prompt.textContent = step.kind === "carry-check"
+    ? step.expression
+    : step.expression + "＝";
 }
 
 $("#numberPad").addEventListener("click", event => {
