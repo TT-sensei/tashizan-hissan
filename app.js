@@ -263,7 +263,7 @@ function loadFantasyAction(hero,action,onReady){
   const key=hero.id+":"+action;
   if(fantasyActionCache[key]){onReady(fantasyActionCache[key]);return;}
   const templates=FANTASY_ACTION_CANDIDATES[action]||[];
-  const bases=[FANTASY_BASE+action+"/",NAVi_BASE+"fantasy/"+action+"/"];
+  const bases=[FANTASY_BASE+action+"/"];
   const candidates=[];
   for(const base of bases){
     for(const template of templates){
@@ -330,7 +330,6 @@ function battlePlaceCorrect(){
 function battleProblemComplete(){
   if(battleState.finished)return;
   battleState.correct+=1;
-  battleState.combo+=1;
   badgeSystem.correct();
   playRecipe("correct", 0.9);
   $("#sessionCorrect").textContent="正解 "+battleState.correct+(battleState.combo>1?"　コンボ "+battleState.combo:"");
