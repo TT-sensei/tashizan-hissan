@@ -27,7 +27,14 @@ const GROUP1 = [
   ["komorin-little-night-bat","こもりんナイトバット"],
   ["purun-little-magic-slime","ぷるんスライム"],
   ["ember-frost-pup","エンバーフロストパップ"],
-  ["sakura-snow-puff","さくらスノーパフ"]
+  ["sakura-snow-puff","さくらスノーパフ"],
+  ["star-bat","スターバット"],
+  ["night-snow-puff","ナイトスノーパフ"],
+  ["sunset-puru","サンセットぷる"],
+  ["mizutama-kappa","みずたまカッパ"],
+  ["lantern-firefly","ランタンホタル"],
+  ["cloud-rain-rabbit","くもあめウサギ"],
+  ["pebble-ram","こいしラム"]
 ];
 const BATTLE_RECORD_KEY = "tashizanHissanBattle.v1";
 const battleState = {
@@ -944,5 +951,6 @@ $("#modeChoice").addEventListener("click", event=>{
 });
 $("#battleStartButton").addEventListener("click",startBattleMode);
 $("#battleSetupBackButton").addEventListener("click",()=>{showScreen(homeScreen);renderHome();});
+$("#battleEntryButton").addEventListener("click",showBattleSetup);
 $("#battleResultAgain").addEventListener("click",startAgainBattle);
 $("#battleResultHome").addEventListener("click",endBattleToHome);
