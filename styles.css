@@ -333,9 +333,11 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 /* ホームはバトルへの入口だけにする */
 #homeScreen{
   padding:20px;
-  display:flex;
   align-items:center;
   justify-content:center;
+}
+#homeScreen.active{
+  display:flex;
 }
 .battle-home-shell{
   width:min(760px,100%);
