@@ -37,6 +37,10 @@
       <div id="characterSelectGrid" class="character-select-grid"></div>
       <div class="battle-setup-actions">
         <button id="battleStartButton" class="primary-button" type="button" disabled>バトルをはじめる</button>
+        <button id="badgeCollectionButton" class="secondary-button badge-entry-button" type="button">
+          <span>バッジ・コレクション</span>
+          <small><strong id="badgeCollectionCount">0 / 85</strong> 集めよう</small>
+        </button>
         </div>
     </div>
   </main>
@@ -121,6 +125,31 @@
     </div>
 
     <div id="hintBox" class="hint-box" hidden></div>
+
+    <div id="badgeCollectionOverlay" class="overlay badge-overlay" hidden>
+      <div class="badge-collection-card">
+        <div class="badge-collection-head">
+          <div>
+            <p class="complete-kicker">COLLECTION</p>
+            <h2>バッジ・コレクション</h2>
+            <p>がんばった記録が、少しずつコレクションになるよ。</p>
+          </div>
+          <button id="badgeCollectionClose" class="secondary-button" type="button">とじる</button>
+        </div>
+        <div class="badge-collection-toolbar">
+          <span>集めた数 <strong id="badgeCollectionCount">0 / 85</strong></span>
+          <select id="badgeCategoryFilter" aria-label="バッジの種類">
+            <option value="all">すべて</option>
+            <option value="算数">算数</option>
+            <option value="共通">共通</option>
+            <option value="ファンタジー">ファンタジー</option>
+          </select>
+        </div>
+        <div id="badgeCollectionGrid" class="badge-collection-grid"></div>
+      </div>
+    </div>
+
+    <div id="badgeToast" class="badge-toast" hidden></div>
 
     <div id="battleResultOverlay" class="overlay" hidden>
       <div class="complete-card battle-result-card">
