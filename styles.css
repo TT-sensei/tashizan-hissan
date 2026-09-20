@@ -281,3 +281,10 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
  .battle-side img{width:62px;height:90px}
  .battle-game-layout .board-wrap{transform:scale(.82);margin-bottom:-30px}
 }
+
+/* バトル画面は、残った横幅を中央の筆算エリアへ使う */
+.battle-game-layout{grid-template-columns:100px minmax(300px,1fr) 100px minmax(320px,380px)}
+.battle-game-layout .work-area{padding-inline:8px}
+@media(max-width:900px){
+  .battle-game-layout{grid-template-columns:72px minmax(230px,1fr) 72px minmax(250px,310px)}
+}
