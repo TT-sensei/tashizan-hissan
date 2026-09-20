@@ -534,3 +534,160 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 .character-pick{
   position:relative;
 }
+
+
+/* バッジ・コレクション */
+.badge-entry-button{
+  border:2px solid #8fa8bb;
+  background:rgba(255,255,255,.9);
+  color:var(--ink);
+  border-radius:14px;
+  padding:9px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:48px;
+}
+.badge-entry-button span{font-weight:900}
+.badge-entry-button small{color:var(--muted);font-weight:800}
+.badge-entry-button:hover{border-color:#234f78;background:#f7fafc}
+.badge-overlay{padding:14px}
+.badge-collection-card{
+  width:min(980px,100%);
+  max-height:min(90svh,820px);
+  overflow:hidden;
+  background:#f8fafc;
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:24px;
+  box-shadow:0 18px 55px rgba(15,30,45,.24);
+  display:flex;
+  flex-direction:column;
+}
+.badge-collection-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:20px 22px 14px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+}
+.badge-collection-head h2{margin:0;font-size:clamp(24px,4vw,34px)}
+.badge-collection-head p:last-child{margin:5px 0 0;color:var(--muted);font-weight:700}
+.badge-collection-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 18px;
+  background:#f2f6f9;
+  border-bottom:1px solid var(--line);
+  font-size:13px;
+  font-weight:800;
+}
+.badge-collection-toolbar select{
+  border:1px solid #b9c9d5;
+  border-radius:10px;
+  background:#fff;
+  padding:8px 10px;
+  color:var(--ink);
+  font-weight:800;
+}
+.badge-collection-grid{
+  overflow:auto;
+  padding:16px;
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:10px;
+}
+.badge-card{
+  position:relative;
+  border:1px solid #d5e0e8;
+  border-radius:16px;
+  background:#fff;
+  padding:9px;
+  min-width:0;
+  text-align:center;
+  color:var(--ink);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  box-shadow:0 3px 10px rgba(32,55,74,.045);
+  transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease;
+}
+.badge-card:hover{transform:translateY(-2px);border-color:#9eb3c4;box-shadow:0 7px 16px rgba(32,55,74,.09)}
+.badge-card.locked{background:#eef2f5;filter:saturate(.25)}
+.badge-card strong{font-size:12px;line-height:1.25}
+.badge-card small{min-height:30px;color:var(--muted);font-size:10px;font-weight:700;line-height:1.35}
+.badge-image-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:1;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border-radius:12px;
+  background:#f5f8fa;
+}
+.badge-image-wrap img{width:100%;height:100%;object-fit:contain}
+.badge-lock{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  background:rgba(30,47,60,.35);
+  color:#fff;
+  font-size:28px;
+  font-weight:900;
+}
+.badge-rarity{
+  position:absolute;
+  top:7px;
+  left:7px;
+  padding:2px 6px;
+  border-radius:999px;
+  background:rgba(35,79,120,.88);
+  color:#fff;
+  font-size:8px;
+  font-weight:900;
+}
+.badge-rarity.rare{background:#6b5aa8}
+.badge-rarity.secret{background:#4d4d58}
+.badge-rarity.super-rare{background:#b38328}
+.badge-toast{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  z-index:90;
+  width:min(360px,calc(100vw - 28px));
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 13px;
+  border:2px solid #e0c34d;
+  border-radius:16px;
+  background:#fffdf0;
+  box-shadow:0 12px 30px rgba(15,30,45,.2);
+  animation:badgeToastIn .22s ease;
+}
+.badge-toast img{width:48px;height:48px;object-fit:contain}
+.badge-toast div{min-width:0}
+.badge-toast strong,.badge-toast span{display:block}
+.badge-toast strong{font-size:12px}
+.badge-toast span{margin-top:2px;font-size:14px;font-weight:900}
+@keyframes badgeToastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:800px){
+  .badge-collection-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .badge-collection-head{padding:16px;align-items:flex-start}
+  .badge-collection-head p:last-child{font-size:11px}
+  .badge-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px}
+  .badge-card{padding:7px;border-radius:13px}
+  .badge-card strong{font-size:11px}
+  .badge-card small{font-size:9px}
+  .badge-entry-button{flex-direction:column;gap:2px}
+}
