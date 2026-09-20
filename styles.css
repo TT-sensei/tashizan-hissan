@@ -699,3 +699,12 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
   #badgeScreen{padding:8px}
   .badge-page-card{width:100%;height:calc(100svh - 16px);border-radius:18px}
 }
+/* ファンタジーバトルのアクション演出 */
+.hero-action-pop{animation:heroActionPop .6s ease}
+.hero-special-pop{animation:heroSpecialPop .9s ease}
+.hero-damage-pop{animation:heroDamagePop .6s ease}
+.special-pop span{animation:specialPop .9s ease}
+@keyframes heroActionPop{0%{transform:translateY(8px) scale(.94);opacity:.55}45%{transform:translateY(-7px) scale(1.08);opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes heroSpecialPop{0%{transform:scale(.82);filter:drop-shadow(0 5px 4px rgba(0,0,0,.12))}35%{transform:scale(1.18);filter:drop-shadow(0 0 16px rgba(255,225,92,.9))}70%{transform:scale(1.06);filter:drop-shadow(0 0 10px rgba(255,225,92,.55))}100%{transform:scale(1);filter:drop-shadow(0 5px 4px rgba(0,0,0,.12))}}
+@keyframes heroDamagePop{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px) rotate(-3deg)}40%{transform:translateX(9px) rotate(3deg)}60%{transform:translateX(-6px)}}
+@keyframes specialPop{0%{transform:scale(.55);opacity:0}35%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:1}}
