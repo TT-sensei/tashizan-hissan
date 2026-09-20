@@ -1,0 +1,66 @@
+:root{
+  --ink:#183047; --muted:#68798a; --line:#d7e1e9; --line-strong:#8ea3b5;
+  --paper:#fff; --soft:#edf3f7; --focus:#fff3b5; --focus-line:#e6c64f;
+  --correct:#dff4e9; --danger:#fff0f0; --danger-line:#dc7070;
+  --accent:#2d6ca8; --accent-dark:#234f78; --cell:88px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#f3f6f9;color:var(--ink)}
+body{font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;touch-action:manipulation;overflow:hidden}
+button{font:inherit;font-weight:800;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
+.screen{display:none;min-height:100svh}.screen.active{display:flex}
+#homeScreen{align-items:center;justify-content:center;padding:24px}
+.home-shell{width:min(980px,100%);display:flex;flex-direction:column;gap:26px}
+.home-header{text-align:center}
+.eyebrow,.section-kicker,.instruction-kicker,.complete-kicker{margin:0 0 6px;color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.12em}
+.home-header h1{margin:0;font-size:clamp(34px,6vw,56px);letter-spacing:.02em}
+.lead{margin:8px 0 0;color:var(--muted);font-weight:700;font-size:clamp(15px,2.5vw,19px)}
+.level-section{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 10px 32px rgba(32,55,74,.07)}
+.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+.section-title h2{margin:0;font-size:clamp(18px,3vw,24px)}
+.home-record{display:flex;align-items:baseline;gap:4px;color:var(--muted);white-space:nowrap}
+.home-record strong{font-size:26px;color:var(--ink)}
+.level-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.level-card{width:100%;min-height:168px;border:2px solid var(--line);border-radius:18px;background:#fbfcfd;color:var(--ink);padding:16px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;transition:transform .12s,box-shadow .12s,border-color .12s,background .12s}
+.level-card:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(32,55,74,.09);border-color:#b9cad7;background:#fff}
+.level-card .num{font-size:12px;color:var(--muted);font-weight:900;letter-spacing:.08em}
+.level-card .name{margin-top:7px;font-size:20px;line-height:1.25}
+.level-card .desc{margin-top:7px;color:var(--muted);font-size:13px;line-height:1.55}.level-card .example{align-self:flex-end;color:var(--accent);font-size:13px;font-weight:900}
+.how-section{display:flex;justify-content:center}.flow{display:flex;align-items:center;justify-content:center;gap:12px;padding:11px 15px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);font-size:14px;font-weight:900}.flow i{font-style:normal;color:#91a3b2}
+#gameScreen{flex-direction:column}
+.game-topbar{min-height:64px;background:#fff;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:8px 12px}
+.ghost-button,.secondary-button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:11px;padding:10px 13px}
+.game-title-wrap{display:flex;align-items:center;justify-content:center;gap:10px;min-width:0}.game-title-wrap h1{margin:0;font-size:20px;white-space:nowrap}.level-badge{background:var(--soft);border-radius:999px;padding:5px 9px;color:var(--muted);font-size:11px;font-weight:900}
+.game-progress{justify-self:end;display:flex;gap:12px;color:var(--muted);font-size:13px;font-weight:800}
+.game-layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);gap:0}
+.work-area{min-width:0;min-height:0;padding:18px;display:flex;align-items:center;justify-content:center}
+.problem-card{width:min(720px,100%);max-height:100%;background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:0 10px 30px rgba(32,55,74,.06)}
+.problem-meta{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.problem-meta #problemLabel{font-size:13px;color:var(--muted);font-weight:900}.problem-expression{font-size:15px;font-weight:900;color:var(--muted)}
+.board-wrap{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.board{display:grid;grid-auto-rows:var(--cell);min-width:max-content;background:#fff;border:2px solid var(--ink);border-radius:14px;overflow:hidden}
+.cell{width:var(--cell);height:var(--cell);display:flex;align-items:center;justify-content:center;border-right:1px solid #e7edf2;border-bottom:1px solid #e7edf2;font-size:clamp(30px,calc(var(--cell)*.52),52px);font-weight:800;position:relative;background:#fff}
+.cell.carry{font-size:clamp(19px,calc(var(--cell)*.31),30px);align-items:flex-start;padding-top:6px;color:#55708a}.cell.operand{color:var(--ink)}.cell.result{border-top:3px solid var(--ink);font-weight:900}
+.cell.plus::before{content:"＋";font-size:clamp(26px,calc(var(--cell)*.39),38px);color:var(--muted)}.cell.plus{font-size:0}
+.cell.focus{background:var(--focus);box-shadow:inset 0 0 0 3px var(--focus-line);z-index:2}
+.cell.done{background:#f4fbf7;color:#246b4a}.cell.wrong{background:var(--danger);box-shadow:inset 0 0 0 3px var(--danger-line)}
+.column-guide{position:absolute;pointer-events:none;inset:0}.column-guide:after{content:"";position:absolute;top:0;width:3px;height:var(--guide-height,0);left:var(--guide-left,0);background:var(--focus-line);border-radius:99px}
+.work-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.learning-panel{min-height:0;background:#f8fafc;border-left:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.step-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.step-pill{padding:8px 6px;border-radius:999px;background:#edf1f5;color:#7c8a97;text-align:center;font-size:12px;font-weight:900}.step-pill.active{background:var(--focus);color:#5c4e0c}.step-pill.done{background:var(--correct);color:#286946}
+.instruction-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;min-height:166px;display:flex;flex-direction:column;justify-content:center}
+.instruction-card h2{margin:0;font-size:clamp(22px,3vw,31px)}.instruction-text{margin:7px 0 0;color:var(--muted);font-size:14px;line-height:1.55;font-weight:700}
+.calculation-prompt{margin-top:13px;border-radius:13px;background:#edf4f9;padding:10px 12px;font-size:clamp(24px,4vw,34px);font-weight:900;letter-spacing:.06em;text-align:center;min-height:54px;display:flex;align-items:center;justify-content:center}
+.feedback{min-height:24px;margin-top:9px;font-size:14px;font-weight:900}.feedback.good{color:#28734f}.feedback.bad{color:#b44545}.feedback.neutral{color:var(--muted)}
+.answer-area{min-height:0;display:flex;flex-direction:column}.answer-label{font-size:12px;color:var(--muted);font-weight:900;margin-bottom:6px}
+.answer-display{min-height:56px;border:2px dashed #a5b4c1;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;letter-spacing:.12em;margin-bottom:10px}
+.number-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.pad-button{border:0;border-radius:12px;background:#fff;color:var(--ink);min-height:50px;font-size:22px;box-shadow:0 2px 0 #ccd6df}.pad-button:active{transform:translateY(1px);box-shadow:none}.pad-button.function{background:#e8eef3;color:#526675;font-size:17px}.pad-button.submit{background:var(--accent);color:#fff;box-shadow:0 3px 0 var(--accent-dark)}.pad-button.submit:active{box-shadow:0 1px 0 var(--accent-dark)}
+.hint-box{position:fixed;right:calc(min(33vw,440px) + 18px);bottom:18px;z-index:20;width:min(390px,calc(100vw - 36px));padding:13px 15px;background:#fffdf0;border:1px solid #e4d37c;border-radius:14px;box-shadow:0 8px 22px rgba(32,55,74,.14);font-size:13px;font-weight:800;line-height:1.55}
+.overlay{position:fixed;inset:0;background:rgba(24,48,71,.48);display:grid;place-items:center;padding:18px;z-index:50}.complete-card{width:min(420px,100%);background:#fff;border-radius:22px;padding:24px;text-align:center;box-shadow:0 18px 55px rgba(15,30,45,.23)}
+.complete-mark{width:58px;height:58px;margin:0 auto 8px;border-radius:50%;background:var(--correct);color:#26714d;display:grid;place-items:center;font-size:34px;font-weight:900}.complete-card h2{margin:0;font-size:28px}.complete-card p{color:var(--muted);font-weight:700;line-height:1.55}.complete-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:17px}
+.primary-button{border:0;border-radius:12px;background:var(--accent);color:#fff;padding:12px 20px;box-shadow:0 3px 0 var(--accent-dark)}.primary-button:active{transform:translateY(1px);box-shadow:0 1px 0 var(--accent-dark)}
+[hidden]{display:none !important}
+@media (max-width:900px){.level-grid{grid-template-columns:repeat(2,1fr)}.game-layout{grid-template-columns:minmax(0,1fr) minmax(280px,.8fr)}}
+@media (orientation:portrait){body{overflow:auto}.game-layout{grid-template-columns:1fr;grid-template-rows:minmax(360px,1fr) auto}.work-area{min-height:420px}.learning-panel{border-left:0;border-top:1px solid var(--line);overflow:visible}.hint-box{right:18px;bottom:18px}}
+@media (max-width:600px){#homeScreen{padding:14px}.home-shell{gap:16px}.level-section{padding:14px;border-radius:18px}.level-grid{gap:8px}.level-card{min-height:145px;padding:13px}.level-card .name{font-size:17px}.level-card .desc{font-size:12px}.section-title{align-items:center}.flow{font-size:12px;gap:8px}.game-topbar{grid-template-columns:auto 1fr auto;min-height:58px}.game-title-wrap{justify-content:flex-start}.game-title-wrap h1{font-size:16px}.game-progress{font-size:11px;gap:6px;flex-direction:column;align-items:flex-end}.work-area{padding:10px;min-height:350px}.problem-card{padding:12px;border-radius:18px}.learning-panel{padding:12px}.board{--cell:clamp(64px,18vw,88px)}.work-actions .secondary-button{font-size:13px;padding:9px 11px}}
+@media (max-width:430px){.level-grid{grid-template-columns:1fr}.level-card{min-height:120px}.home-record{font-size:11px}.home-record strong{font-size:22px}.step-rail{grid-template-columns:1fr 1fr}.step-pill:nth-child(3){grid-column:1/-1}.number-pad{gap:6px}.pad-button{min-height:46px}}
