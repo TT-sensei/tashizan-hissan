@@ -9,40 +9,16 @@
 </head>
 <body>
   <main id="homeScreen" class="screen active">
-    <div class="home-shell">
-      <header class="home-header">
-        <p class="eyebrow">筆算を ひとつずつ</p>
-        <h1>たし算の筆算</h1>
-        <p class="lead">右のくらいから、計算して、答えを書く。レベル2からは、くり上がりの有無も考えます。</p>
-      </header>
-
-      <section class="level-section" aria-labelledby="levelTitle">
-        <div class="section-title">
-          <div>
-            <p class="section-kicker">LEVEL</p>
-            <h2 id="levelTitle">れんしゅうするところをえらぼう</h2>
-          </div>
-          <div class="home-record" aria-label="記録">
-            <span>正解</span>
-            <strong id="homeCorrect">0</strong>
-            <span>問</span>
-          </div>
-        </div>
-        <div id="levelGrid" class="level-grid"></div>
-      </section>
-
-      <section class="battle-entry" aria-label="たし算バトル">
-        <button id="battleEntryButton" class="battle-entry-button" type="button">
-          <span>たし算バトル</span>
-          <small>ナビキャラといっしょに、筆算でナビアンにちょうせん</small>
+    <div class="battle-home-shell">
+      <div class="battle-home-copy">
+        <p class="eyebrow">FANTASY BATTLE</p>
+        <h1>たし算バトル</h1>
+        <p>ナビキャラといっしょに、筆算でナビアンにちょうせんしよう。</p>
+        <button id="battleEntryButton" class="battle-home-start" type="button">
+          <span>バトルをはじめる</span>
+          <small>5問バトル / 10問タイムアタック</small>
         </button>
-      </section>
-
-      <section class="how-section" aria-label="筆算の流れ">
-        <div class="flow">
-          <span>右から</span><i>→</i><span>たす</span><i>→</i><span>くり上がりを考える</span><i>→</i><span>書く</span>
-        </div>
-      </section>
+      </div>
     </div>
   </main>
 
@@ -92,13 +68,11 @@
         <span id="battleModeLabel">筆算</span>
         <span id="questionProgress">1 / 10</span>
         <span id="sessionCorrect">正解 0</span>
-        <span id="battleTimer" hidden>00:00.0</span>
       </div>
     </header>
 
     <div id="battleHud" class="battle-hud" hidden>
       <div class="battle-center-hud">
-        <div class="battle-hearts" id="battleHearts" aria-label="のこりミス回数">♥ ♥ ♥ ♥ ♥</div>
         <div class="battle-status" id="battleStatus">ナビアンがあらわれた！</div>
       </div>
       <div class="battle-timer" id="battleTimer" aria-live="polite"></div>
@@ -112,6 +86,7 @@
       <aside class="battle-side battle-side-left">
         <img id="heroBattleImage" alt="">
         <strong id="heroBattleName"></strong>
+        <div class="battle-hearts battle-side-hearts" id="battleHearts" aria-label="のこりミス回数">♥ ♥ ♥ ♥ ♥</div>
       </aside>
 
       <section class="work-area" aria-label="筆算">
