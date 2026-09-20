@@ -102,7 +102,7 @@ function showBattleSetup(){
   $("#selectedBattleLevelLabel").textContent="えらんでね";
   renderBattleLevelChoice();
   renderCharacterSelect();
-  showScreen(battleSetupScreen);
+  showScreen(homeScreen);
 }
 function chooseEnemyList(){
   return [...GROUP1].sort(()=>Math.random()-.5);
@@ -282,7 +282,11 @@ function showScreen(screen) {
   screen.classList.add("active");
 }
 
-function renderHome() {}
+function renderHome() {
+  renderBattleLevelChoice();
+  renderCharacterSelect();
+}
+
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -974,7 +978,5 @@ $("#modeChoice").addEventListener("click", event=>{
   if(button)selectBattleMode(button.dataset.mode);
 });
 $("#battleStartButton").addEventListener("click",startBattleMode);
-$("#battleSetupBackButton").addEventListener("click",()=>{showScreen(homeScreen);renderHome();});
-$("#battleEntryButton").addEventListener("click",showBattleSetup);
 $("#battleResultAgain").addEventListener("click",startAgainBattle);
 $("#battleResultHome").addEventListener("click",endBattleToHome);
