@@ -12,7 +12,7 @@ const SESSION_SIZE = 10;
 
 // 筆算エンジンには手を入れず、バトル情報だけを上に重ねる。
 
-const NAVI_BASE = "https://tt-sensei.github.io/navi-character-/assets/web/";
+const NAVI_BASE = "https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/web/";
 const FANTASY_BASE = NAVI_BASE + "fantasy/";
 const HEROES = [
   { id:"riku", name:"りく", image:"riku-ninja" },
