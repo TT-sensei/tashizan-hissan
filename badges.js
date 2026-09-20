@@ -215,17 +215,24 @@ function showBadgeToast(badges){
 }
 function openBadgeCollection(){
   renderBadgeCollection();
-  document.querySelector("#badgeCollectionOverlay").hidden=false;
+  const screen=document.querySelector("#badgeScreen");
+  if(screen){
+    document.querySelectorAll(".screen").forEach(el=>el.classList.remove("active"));
+    screen.classList.add("active");
+  }
 }
-function closeBadgeCollection(){document.querySelector("#badgeCollectionOverlay").hidden=true;}
+function closeBadgeCollection(){
+  const home=document.querySelector("#homeScreen");
+  if(home){
+    document.querySelectorAll(".screen").forEach(el=>el.classList.remove("active"));
+    home.classList.add("active");
+  }
+}
 
 function initBadgeSystem(){
   document.querySelector("#badgeCollectionButton")?.addEventListener("click",openBadgeCollection);
   document.querySelector("#badgeCollectionClose")?.addEventListener("click",closeBadgeCollection);
   document.querySelector("#badgeCategoryFilter")?.addEventListener("change",renderBadgeCollection);
-  document.querySelector("#badgeCollectionOverlay")?.addEventListener("click",e=>{
-    if(e.target.id==="badgeCollectionOverlay")closeBadgeCollection();
-  });
   document.querySelector("#badgeCollectionGrid")?.addEventListener("click",e=>{
     const card=e.target.closest("[data-badge-id]");
     if(!card)return;
