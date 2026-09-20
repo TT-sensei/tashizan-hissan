@@ -242,3 +242,9 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 .battle-entry-button small{color:var(--muted);font-weight:700;text-align:right}
 .battle-entry-button:hover{border-color:var(--accent);background:#f8fbfd}
 @media(max-width:600px){.battle-entry-button{flex-direction:column;align-items:flex-start;gap:4px}.battle-entry-button small{text-align:left}}
+
+.battle-level-choice{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px}
+.battle-level-pick{border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px 8px;text-align:left;display:flex;flex-direction:column;gap:2px}
+.battle-level-pick strong{font-size:18px}.battle-level-pick span{font-weight:800;font-size:13px}
+.battle-level-pick.selected{border-color:var(--accent);background:#f2f7fb;box-shadow:0 0 0 2px rgba(45,108,168,.08)}
+@media(max-width:700px){.battle-level-choice{grid-template-columns:repeat(2,1fr)}}
