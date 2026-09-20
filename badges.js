@@ -201,8 +201,7 @@ function renderBadgeCollection(){
   const filter=document.querySelector("#badgeCategoryFilter")?.value||"all";
   const list=filter==="all"?BADGES:BADGES.filter(b=>b.category===filter);
   root.innerHTML=list.map(badgeCard).join("");
-  const count=document.querySelector("#badgeCollectionCount");
-  if(count)count.textContent=unlocked.size+" / "+BADGES.length;
+  document.querySelectorAll("#badgeCollectionCount, #badgeCollectionHomeCount").forEach(count=>count.textContent=unlocked.size+" / "+BADGES.length);
 }
 function showBadgeToast(badges){
   const toast=document.querySelector("#badgeToast");
