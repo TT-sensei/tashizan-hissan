@@ -68,6 +68,19 @@ function generateProblem(levelId) {
   }
 
   if (level.kind === "two-carry-ones") {
+    // レベル2は、基本は1の位でくり上がるが、ときどき「なし」も入れる。
+    if (Math.random() < 0.3) {
+      let a, b;
+      do {
+        a = randomInt(10, 99);
+        b = randomInt(10, 99);
+      } while (
+        (a % 10) + (b % 10) >= 10 ||
+        Math.floor(a / 10) + Math.floor(b / 10) >= 10
+      );
+      return { a, b };
+    }
+
     let a, b;
     do {
       a = randomInt(10, 99);
@@ -80,6 +93,19 @@ function generateProblem(levelId) {
   }
 
   if (level.kind === "two-carry-twice") {
+    // レベル3も、ときどき「どの位もくり上がらない」問題を入れる。
+    if (Math.random() < 0.3) {
+      let a, b;
+      do {
+        a = randomInt(10, 99);
+        b = randomInt(10, 99);
+      } while (
+        (a % 10) + (b % 10) >= 10 ||
+        Math.floor(a / 10) + Math.floor(b / 10) >= 10
+      );
+      return { a, b };
+    }
+
     let a, b;
     do {
       a = randomInt(10, 99);
