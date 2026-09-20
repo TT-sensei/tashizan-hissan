@@ -12,7 +12,7 @@ const SESSION_SIZE = 10;
 
 // 筆算エンジンには手を入れず、バトル情報だけを上に重ねる。
 
-const NAVI_BASE = "https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/web/";
+const NAVI_BASE = "https://tt-sensei.github.io/navi-character-/assets/web/";
 const FANTASY_BASE = NAVI_BASE + "fantasy/";
 const BATTLE_BACKGROUNDS = [
   "grassland", "riverbank", "forest", "ruins",
@@ -161,10 +161,6 @@ function setupBattleEnemy(){
   const hero=HEROES[battleState.heroIndex];
   const heroSrc=FANTASY_BASE+hero.image+".webp";
   const enemySrc=FANTASY_BASE+"monsters/zako/"+enemy[0]+".webp";
-  $("#heroMini").src=heroSrc;
-  $("#heroMiniName").textContent=hero.name;
-  $("#enemyMini").src=enemySrc;
-  $("#enemyMiniName").textContent=enemy[1];
   $("#heroBattleImage").src=heroSrc;
   $("#heroBattleName").textContent=hero.name;
   $("#enemyBattleImage").src=enemySrc;
