@@ -502,3 +502,35 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
   border-radius:16px;
   backdrop-filter:blur(3px);
 }
+
+
+/* 選択中を明確に表示 */
+.mode-card.selected,
+.battle-level-pick.selected,
+.character-pick.selected{
+  border-color:#234f78 !important;
+  border-width:3px;
+  box-shadow:0 0 0 2px rgba(35,79,120,.16), 0 4px 12px rgba(35,79,120,.12);
+}
+.mode-card.selected::after,
+.battle-level-pick.selected::after,
+.character-pick.selected::after{
+  content:"✓";
+  position:absolute;
+  top:7px;
+  right:8px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#234f78;
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+}
+.mode-card,
+.battle-level-pick,
+.character-pick{
+  position:relative;
+}
