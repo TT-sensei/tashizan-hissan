@@ -1,3 +1,4 @@
+import { badgeSystem } from "./badges.js";
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
@@ -207,6 +208,7 @@ function updateBattleHud(){
 function registerBattleMistake(){
   if(battleState.finished || !battleState.mode)return;
   battleState.mistakes=Math.min(5,battleState.mistakes+1);
+  badgeSystem.mistake();
   updateBattleHud();
   if(battleState.mode==="battle" && battleState.mistakes>=5){
     finishBattle(false,"ゲームオーバー");
@@ -233,6 +235,7 @@ function battlePlaceCorrect(){
 function battleProblemComplete(){
   if(battleState.finished)return;
   battleState.correct+=1;
+  badgeSystem.correct();
   $("#sessionCorrect").textContent="正解 "+battleState.correct;
   battleState.enemyIndex+=1;
   if(battleState.enemyIndex>=battleState.questionTotal){
@@ -261,6 +264,8 @@ function finishBattle(won,title){
     }
   }
   saveBattleRecord(record);
+  if(won) badgeSystem.battleResult({won,mode:battleState.mode,mistakes:battleState.mistakes,elapsed,levelId:battleState.levelId});
+  else badgeSystem.gameOver();
   $("#battleResultMark").textContent=won?"✓":"×";
   $("#battleResultKicker").textContent=battleState.mode==="battle"?"5問バトル":"10問タイムアタック";
   $("#battleResultTitle").textContent=title;
@@ -928,6 +933,7 @@ function finishLevel() {
 }
 
 function retryProblem() {
+  badgeSystem.retry();
   const current = state.problem;
   state.problem = createProblemModel(current.a, current.b);
   state.steps = buildSteps(state.problem);
@@ -941,6 +947,7 @@ function retryProblem() {
 }
 
 function showHint() {
+  badgeSystem.hint();
   const step = state.steps[state.stepIndex];
   if (!step || step.kind === "finish") return;
 
@@ -1013,4 +1020,5 @@ $("#battleStartButton").addEventListener("click",startBattleMode);
 $("#battleResultAgain").addEventListener("click",startAgainBattle);
 $("#battleResultHome").addEventListener("click",endBattleToHome);
 
+badgeSystem.init();
 renderHome();
