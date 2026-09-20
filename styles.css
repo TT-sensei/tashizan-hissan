@@ -235,3 +235,10 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 @keyframes attackPop{0%{transform:scale(.75);opacity:0}45%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
 @keyframes enemyHit{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px) rotate(-2deg)}50%{transform:translateX(9px) rotate(2deg)}75%{transform:translateX(-5px)}}
 @media(max-width:700px){.mode-choice{grid-template-columns:1fr}.character-select-grid{grid-template-columns:repeat(3,1fr)}.character-pick img{height:74px}.battle-hud{padding:5px 8px}.hero-mini img,.enemy-mini img{width:38px;height:38px}.battle-hearts{font-size:17px}.enemy-hp{width:60px}}
+
+.battle-entry{display:flex;justify-content:center}
+.battle-entry-button{width:min(620px,100%);border:2px solid #9db3c4;background:#fff;border-radius:18px;padding:14px 18px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 4px 14px rgba(32,55,74,.05)}
+.battle-entry-button span{font-size:20px;font-weight:900}
+.battle-entry-button small{color:var(--muted);font-weight:700;text-align:right}
+.battle-entry-button:hover{border-color:var(--accent);background:#f8fbfd}
+@media(max-width:600px){.battle-entry-button{flex-direction:column;align-items:flex-start;gap:4px}.battle-entry-button small{text-align:left}}
