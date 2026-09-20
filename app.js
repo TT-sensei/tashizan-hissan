@@ -38,7 +38,7 @@ const GROUP1 = [
 ];
 const BATTLE_RECORD_KEY = "tashizanHissanBattle.v1";
 const battleState = {
-  mode:null, heroIndex:null, enemyIndex:0, enemies:[],
+  mode:null, heroIndex:null, levelId:null, enemyIndex:0, enemies:[],
   mistakes:0, correct:0, questionTotal:5, startedAt:0, timerId:null,
   enemyHp:0, enemyMaxHp:0, finished:false
 };
@@ -49,6 +49,23 @@ function battleRecord(){
   try{return JSON.parse(localStorage.getItem(BATTLE_RECORD_KEY) || "{}")}catch{return {}}
 }
 function saveBattleRecord(data){localStorage.setItem(BATTLE_RECORD_KEY,JSON.stringify(data))}
+function renderBattleLevelChoice(){
+  $("#battleLevelChoice").innerHTML = LEVELS.map(level =>
+    '<button type="button" class="battle-level-pick" data-level-id="'+level.id+'">'+
+      '<strong>'+level.short+'</strong><span>'+level.name+'</span>'+
+    '</button>'
+  ).join("");
+  $(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>{
+    btn.addEventListener("click",()=>selectBattleLevel(Number(btn.dataset.levelId)));
+  });
+}
+function selectBattleLevel(levelId){
+  battleState.levelId=levelId;
+  const level=LEVELS.find(item=>item.id===levelId);
+  $(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>btn.classList.toggle("selected",Number(btn.dataset.levelId)===levelId));
+  $("#selectedBattleLevelLabel").textContent=level?level.name:"";
+  $("#battleStartButton").disabled=!(battleState.mode && battleState.heroIndex!==null && battleState.levelId!==null);
+}
 function renderCharacterSelect(){
   $("#characterSelectGrid").innerHTML = HEROES.map((hero,i)=>
     '<button type="button" class="character-pick" data-hero-index="'+i+'">'+
@@ -69,14 +86,17 @@ function selectHero(index){
 function selectBattleMode(mode){
   battleState.mode=mode;
   $(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===mode));
-  $("#battleStartButton").disabled=battleState.heroIndex===null;
+  $("#battleStartButton").disabled=!(battleState.mode && battleState.heroIndex!==null && battleState.levelId!==null);
 }
 function showBattleSetup(){
   battleState.mode=null;
   battleState.heroIndex=null;
   $(".mode-card").forEach(btn=>btn.classList.remove("selected"));
+  battleState.levelId=null;
   $("#battleStartButton").disabled=true;
   $("#selectedHeroLabel").textContent="えらんでね";
+  $("#selectedBattleLevelLabel").textContent="えらんでね";
+  renderBattleLevelChoice();
   renderCharacterSelect();
   showScreen(battleSetupScreen);
 }
@@ -84,8 +104,9 @@ function chooseEnemyList(){
   return [...GROUP1].sort(()=>Math.random()-.5);
 }
 function startBattleMode(){
-  if(battleState.mode===null || battleState.heroIndex===null)return;
-  battleState.questionTotal=battleState.mode==="battle"?5:10;
+  if(battleState.mode===null || battleState.heroIndex===null || battleState.levelId===null)return;
+  state.level=LEVELS.find(item=>item.id===battleState.levelId);
+  state.questionTotal=battleState.mode==="battle"?5:10;
   battleState.enemies=chooseEnemyList();
   if(battleState.mode==="time"){
     while(battleState.enemies.length<10) battleState.enemies.push(GROUP1[battleState.enemies.length%GROUP1.length]);
@@ -946,6 +967,7 @@ window.addEventListener("orientationchange", () => {
 
 renderHome();
 
+$("#battleLevelChoice").addEventListener("click",()=>{});
 $("#modeChoice").addEventListener("click", event=>{
   const button=event.target.closest("[data-mode]");
   if(button)selectBattleMode(button.dataset.mode);
