@@ -333,7 +333,7 @@ function updateColumnGuide() {
 
 function updateStepRail() {
   const current = state.steps[state.stepIndex];
-  const pills = $(".step-pill");
+  const pills = $$(".step-pill");
   pills.forEach(pill => {
     pill.classList.remove("active", "done");
     pill.hidden = false;
