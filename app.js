@@ -55,14 +55,14 @@ function renderBattleLevelChoice(){
       '<strong>'+level.short+'</strong><span>'+level.name+'</span>'+
     '</button>'
   ).join("");
-  $(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>{
+  $$(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>{
     btn.addEventListener("click",()=>selectBattleLevel(Number(btn.dataset.levelId)));
   });
 }
 function selectBattleLevel(levelId){
   battleState.levelId=levelId;
   const level=LEVELS.find(item=>item.id===levelId);
-  $(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>btn.classList.toggle("selected",Number(btn.dataset.levelId)===levelId));
+  $$(".battle-level-pick",$("#battleLevelChoice")).forEach(btn=>btn.classList.toggle("selected",Number(btn.dataset.levelId)===levelId));
   $("#selectedBattleLevelLabel").textContent=level?level.name:"";
   $("#battleStartButton").disabled=!(battleState.mode && battleState.heroIndex!==null && battleState.levelId!==null);
 }
@@ -73,25 +73,25 @@ function renderCharacterSelect(){
       '<span>'+hero.name+'</span>'+
     '</button>'
   ).join("");
-  $(".character-pick",$("#characterSelectGrid")).forEach(btn=>{
+  $$(".character-pick",$("#characterSelectGrid")).forEach(btn=>{
     btn.addEventListener("click",()=>selectHero(Number(btn.dataset.heroIndex)));
   });
 }
 function selectHero(index){
   battleState.heroIndex=index;
-  $(".character-pick",$("#characterSelectGrid")).forEach((btn,i)=>btn.classList.toggle("selected",i===index));
+  $$(".character-pick",$("#characterSelectGrid")).forEach((btn,i)=>btn.classList.toggle("selected",i===index));
   $("#selectedHeroLabel").textContent=HEROES[index].name+" と いっしょに";
   $("#battleStartButton").disabled=battleState.mode===null;
 }
 function selectBattleMode(mode){
   battleState.mode=mode;
-  $(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===mode));
+  $$(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===mode));
   $("#battleStartButton").disabled=!(battleState.mode && battleState.heroIndex!==null && battleState.levelId!==null);
 }
 function showBattleSetup(){
   battleState.mode=null;
   battleState.heroIndex=null;
-  $(".mode-card").forEach(btn=>btn.classList.remove("selected"));
+  $$(".mode-card").forEach(btn=>btn.classList.remove("selected"));
   battleState.levelId=null;
   $("#battleStartButton").disabled=true;
   $("#selectedHeroLabel").textContent="えらんでね";
