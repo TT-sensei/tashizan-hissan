@@ -126,30 +126,30 @@
 
     <div id="hintBox" class="hint-box" hidden></div>
 
-    <div id="badgeCollectionOverlay" class="overlay badge-overlay" hidden>
-      <div class="badge-collection-card">
-        <div class="badge-collection-head">
-          <div>
-            <p class="complete-kicker">COLLECTION</p>
-            <h2>バッジ・コレクション</h2>
-            <p>がんばった記録が、少しずつコレクションになるよ。</p>
-          </div>
-          <button id="badgeCollectionClose" class="secondary-button" type="button">とじる</button>
+  <main id="badgeScreen" class="screen">
+    <div class="badge-collection-card badge-page-card">
+      <div class="badge-collection-head">
+        <div>
+          <p class="complete-kicker">COLLECTION</p>
+          <h2>バッジ・コレクション</h2>
+          <p>がんばった記録が、少しずつコレクションになるよ。</p>
         </div>
-        <div class="badge-collection-toolbar">
-          <span>集めた数 <strong id="badgeCollectionCount">0 / 85</strong></span>
-          <select id="badgeCategoryFilter" aria-label="バッジの種類">
-            <option value="all">すべて</option>
-            <option value="算数">算数</option>
-            <option value="共通">共通</option>
-            <option value="ファンタジー">ファンタジー</option>
-          </select>
-        </div>
-        <div id="badgeCollectionGrid" class="badge-collection-grid"></div>
+        <button id="badgeCollectionClose" class="secondary-button" type="button">← もどる</button>
       </div>
+      <div class="badge-collection-toolbar">
+        <span>集めた数 <strong id="badgeCollectionCount">0 / 85</strong></span>
+        <select id="badgeCategoryFilter" aria-label="バッジの種類">
+          <option value="all">すべて</option>
+          <option value="算数">算数</option>
+          <option value="共通">共通</option>
+          <option value="ファンタジー">ファンタジー</option>
+        </select>
+      </div>
+      <div id="badgeCollectionGrid" class="badge-collection-grid"></div>
     </div>
+  </main>
 
-    <div id="badgeToast" class="badge-toast" hidden></div>
+  <div id="badgeToast" class="badge-toast" hidden></div>
 
     <div id="battleResultOverlay" class="overlay" hidden>
       <div class="complete-card battle-result-card">
