@@ -250,37 +250,27 @@ function registerBattleMistake(){
   }
 }
 const FANTASY_ACTION_CANDIDATES={
-  attack:["{image}.webp","{id}.webp","{image}-attack.webp","{id}-attack.webp","attack-{image}.webp","attack-{id}.webp","{image}.png","{id}.png","{image}-attack.png","{id}-attack.png","attack-{image}.png","attack-{id}.png"],
-  damage:["{image}.webp","{id}.webp","{image}-damage.webp","{id}-damage.webp","damage-{image}.webp","damage-{id}.webp","{image}.png","{id}.png","{image}-damage.png","{id}-damage.png","damage-{image}.png","damage-{id}.png"],
-  special:["{image}.webp","{id}.webp","{image}-special.webp","{id}-special.webp","special-{image}.webp","special-{id}.webp","{image}.png","{id}.png","{image}-special.png","{id}-special.png","special-{image}.png","special-{id}.png"]
+  attack:"{image}-attack.webp",
+  damage:"{image}-damage.webp",
+  special:"{image}-special.webp"
 };
 const fantasyActionCache={};
 function fantasyActionUrl(hero,action){
-  const key=hero.id+":"+action;
-  return fantasyActionCache[key] || null;
+  return fantasyActionCache[hero.id+":"+action] || null;
 }
 function loadFantasyAction(hero,action,onReady){
   const key=hero.id+":"+action;
   if(fantasyActionCache[key]){onReady(fantasyActionCache[key]);return;}
-  const templates=FANTASY_ACTION_CANDIDATES[action]||[];
-  const bases=[FANTASY_BASE+action+"/"];
-  const candidates=[];
-  for(const base of bases){
-    for(const template of templates){
-      const name=template.replaceAll("{image}",hero.image).replaceAll("{id}",hero.id);
-      candidates.push(base+name);
-    }
-  }
-  let index=0;
-  const tryNext=()=>{
-    if(index>=candidates.length){onReady(null);return;}
-    const src=candidates[index++];
-    const probe=new Image();
-    probe.onload=()=>{fantasyActionCache[key]=src;onReady(src);};
-    probe.onerror=tryNext;
-    probe.src=src;
+  const template=FANTASY_ACTION_CANDIDATES[action];
+  if(!template){onReady(null);return;}
+  const src=FANTASY_BASE+action+"/"+template.replace("{image}",hero.image);
+  const probe=new Image();
+  probe.onload=()=>{
+    fantasyActionCache[key]=src;
+    onReady(src);
   };
-  tryNext();
+  probe.onerror=()=>onReady(null);
+  probe.src=src;
 }
 function playBattleHeroAction(action){
   if(battleState.finished)return;
