@@ -247,7 +247,7 @@ function getCellSize(cols) {
 }
 
 function updateBoardVisuals() {
-  $(".cell", board).forEach(cell => cell.classList.remove("focus", "done", "wrong"));
+  $$(".cell", board).forEach(cell => cell.classList.remove("focus", "done", "wrong"));
 
   const current = state.steps[state.stepIndex];
   if (!current) return;
@@ -307,7 +307,7 @@ function updateColumnGuide() {
 
 function updateStepRail() {
   const current = state.steps[state.stepIndex];
-  const pills = $(".step-pill");
+  const pills = $$(".step-pill");
   pills.forEach(pill => pill.classList.remove("active", "done"));
 
   if (!current) return;
