@@ -412,3 +412,91 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
   font-weight:750;
   color:var(--muted);
 }
+
+
+/* 選択画面：カードにやさしい色をつけ、下の開始エリアは背景になじむ半透明に */
+.mode-card:nth-child(1){
+  background:rgba(231,243,251,.88);
+  border-color:#c7dce9;
+}
+.mode-card:nth-child(2){
+  background:rgba(240,235,250,.88);
+  border-color:#d8cde9;
+}
+.mode-card:nth-child(1).selected{
+  background:rgba(218,238,249,.96);
+}
+.mode-card:nth-child(2).selected{
+  background:rgba(232,224,247,.96);
+}
+
+.battle-level-pick:nth-child(1){
+  background:rgba(239,247,252,.9);
+  border-color:#d0e2ec;
+}
+.battle-level-pick:nth-child(2){
+  background:rgba(239,249,241,.9);
+  border-color:#cfe3d3;
+}
+.battle-level-pick:nth-child(3){
+  background:rgba(252,245,230,.9);
+  border-color:#ead9b7;
+}
+.battle-level-pick:nth-child(4){
+  background:rgba(247,238,247,.9);
+  border-color:#dfcfe0;
+}
+.battle-level-pick:nth-child(1).selected{
+  background:rgba(224,240,250,.98);
+}
+.battle-level-pick:nth-child(2).selected{
+  background:rgba(224,244,228,.98);
+}
+.battle-level-pick:nth-child(3).selected{
+  background:rgba(248,238,214,.98);
+}
+.battle-level-pick:nth-child(4).selected{
+  background:rgba(242,228,242,.98);
+}
+
+.character-pick:nth-child(1){
+  background:rgba(235,244,252,.9);
+  border-color:#cbddea;
+}
+.character-pick:nth-child(2){
+  background:rgba(235,242,250,.9);
+  border-color:#cad9e7;
+}
+.character-pick:nth-child(3){
+  background:rgba(244,239,251,.9);
+  border-color:#d8cde8;
+}
+.character-pick:nth-child(4){
+  background:rgba(240,248,242,.9);
+  border-color:#cde1d1;
+}
+.character-pick:nth-child(5){
+  background:rgba(252,243,231,.9);
+  border-color:#ead7bb;
+}
+.character-pick:nth-child(6){
+  background:rgba(239,248,248,.9);
+  border-color:#cbe0df;
+}
+.character-pick:nth-child(1).selected,
+.character-pick:nth-child(2).selected,
+.character-pick:nth-child(3).selected,
+.character-pick:nth-child(4).selected,
+.character-pick:nth-child(5).selected,
+.character-pick:nth-child(6).selected{
+  background:#fff8dc;
+}
+
+.battle-setup-actions{
+  margin:22px -8px -8px;
+  padding:14px 8px 6px;
+  border-top:1px solid rgba(255,255,255,.62);
+  background:rgba(255,255,255,.46);
+  border-radius:16px;
+  backdrop-filter:blur(3px);
+}
