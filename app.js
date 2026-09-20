@@ -74,7 +74,7 @@ function generateProblem(levelId) {
       b = randomInt(10, 99);
     } while (
       (a % 10) + (b % 10) < 10 ||
-      Math.floor(a / 10) + Math.floor(b / 10) >= 10
+      Math.floor(a / 10) + Math.floor(b / 10) + 1 >= 10
     );
     return { a, b };
   }
