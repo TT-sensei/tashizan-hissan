@@ -9,6 +9,204 @@ const LEVELS = [
 ];
 
 const SESSION_SIZE = 10;
+
+// 筆算エンジンには手を入れず、バトル情報だけを上に重ねる。
+
+const NAVI_BASE = "https://tt-sensei.github.io/navi-character-/assets/web/";
+const FANTASY_BASE = NAVI_BASE + "fantasy/";
+const HEROES = [
+  { id:"riku", name:"りく", image:"riku-ninja" },
+  { id:"sora", name:"そら", image:"sora-swordsman" },
+  { id:"kai", name:"かい", image:"kai-mage" },
+  { id:"saku", name:"さく", image:"saku-cleric-healer" },
+  { id:"tsuki", name:"つき", image:"tsuki-archer" },
+  { id:"nami", name:"なみ", image:"nami-guardian-knight" }
+];
+const GROUP1 = [
+  ["happa-squirrel-leafy","はっぱリス"],
+  ["komorin-little-night-bat","こもりんナイトバット"],
+  ["purun-little-magic-slime","ぷるんスライム"],
+  ["ember-frost-pup","エンバーフロストパップ"],
+  ["sakura-snow-puff","さくらスノーパフ"]
+];
+const BATTLE_RECORD_KEY = "tashizanHissanBattle.v1";
+const battleState = {
+  mode:null, heroIndex:null, enemyIndex:0, enemies:[],
+  mistakes:0, correct:0, questionTotal:5, startedAt:0, timerId:null,
+  enemyHp:0, enemyMaxHp:0, finished:false
+};
+const battleSetupScreen = $("#battleSetupScreen");
+const battleHud = $("#battleHud");
+
+function battleRecord(){
+  try{return JSON.parse(localStorage.getItem(BATTLE_RECORD_KEY) || "{}")}catch{return {}}
+}
+function saveBattleRecord(data){localStorage.setItem(BATTLE_RECORD_KEY,JSON.stringify(data))}
+function renderCharacterSelect(){
+  $("#characterSelectGrid").innerHTML = HEROES.map((hero,i)=>
+    '<button type="button" class="character-pick" data-hero-index="'+i+'">'+
+      '<img src="'+FANTASY_BASE+hero.image+'.webp" alt="">'+
+      '<span>'+hero.name+'</span>'+
+    '</button>'
+  ).join("");
+  $(".character-pick",$("#characterSelectGrid")).forEach(btn=>{
+    btn.addEventListener("click",()=>selectHero(Number(btn.dataset.heroIndex)));
+  });
+}
+function selectHero(index){
+  battleState.heroIndex=index;
+  $(".character-pick",$("#characterSelectGrid")).forEach((btn,i)=>btn.classList.toggle("selected",i===index));
+  $("#selectedHeroLabel").textContent=HEROES[index].name+" と いっしょに";
+  $("#battleStartButton").disabled=battleState.mode===null;
+}
+function selectBattleMode(mode){
+  battleState.mode=mode;
+  $(".mode-card").forEach(btn=>btn.classList.toggle("selected",btn.dataset.mode===mode));
+  $("#battleStartButton").disabled=battleState.heroIndex===null;
+}
+function showBattleSetup(){
+  battleState.mode=null;
+  battleState.heroIndex=null;
+  $(".mode-card").forEach(btn=>btn.classList.remove("selected"));
+  $("#battleStartButton").disabled=true;
+  $("#selectedHeroLabel").textContent="えらんでね";
+  renderCharacterSelect();
+  showScreen(battleSetupScreen);
+}
+function chooseEnemyList(){
+  return [...GROUP1].sort(()=>Math.random()-.5);
+}
+function startBattleMode(){
+  if(battleState.mode===null || battleState.heroIndex===null)return;
+  battleState.questionTotal=battleState.mode==="battle"?5:10;
+  battleState.enemies=chooseEnemyList();
+  if(battleState.mode==="time"){
+    while(battleState.enemies.length<10) battleState.enemies.push(GROUP1[battleState.enemies.length%GROUP1.length]);
+  }
+  battleState.enemyIndex=0;
+  battleState.mistakes=0;
+  battleState.correct=0;
+  battleState.startedAt=performance.now();
+  battleState.finished=false;
+  showScreen(gameScreen);
+  battleHud.hidden=false;
+  $("#battleModeLabel").textContent=battleState.mode==="battle"?"⚔️ バトル":"⏱ タイムアタック";
+  $("#battleTimer").hidden=battleState.mode!=="time";
+  startBattleClock();
+  startQuestion();
+  setupBattleEnemy();
+}
+function startBattleClock(){
+  clearInterval(battleState.timerId);
+  if(battleState.mode!=="time"){$("#battleTimer").textContent="";return}
+  const tick=()=>{
+    const sec=(performance.now()-battleState.startedAt)/1000;
+    $("#battleTimer").textContent=formatBattleTime(sec);
+  };
+  tick();
+  battleState.timerId=setInterval(tick,100);
+}
+function formatBattleTime(sec){
+  const m=Math.floor(sec/60).toString().padStart(2,"0");
+  const s=Math.floor(sec%60).toString().padStart(2,"0");
+  const t=Math.floor((sec%1)*10);
+  return m+":"+s+"."+t;
+}
+function setupBattleEnemy(){
+  const enemy=battleState.enemies[battleState.enemyIndex];
+  if(!enemy)return;
+  battleState.enemyHp=state.problem.maxDigits;
+  battleState.enemyMaxHp=state.problem.maxDigits;
+  const hero=HEROES[battleState.heroIndex];
+  $("#heroMini").src=FANTASY_BASE+hero.image+".webp";
+  $("#heroMiniName").textContent=hero.name;
+  $("#enemyMini").src=FANTASY_BASE+"monsters/zako/"+enemy[0]+".webp";
+  $("#enemyMiniName").textContent=enemy[1];
+  $("#battleStatus").textContent=(battleState.enemyIndex+1)+"体目のナビアン！";
+  updateBattleHud();
+}
+function updateBattleHud(){
+  const hearts=Array.from({length:5},(_,i)=>i<battleState.mistakes?"♡":"♥").join(" ");
+  $("#battleHearts").textContent=hearts;
+  $("#enemyHpFill").style.width=Math.max(0,(battleState.enemyHp/battleState.enemyMaxHp)*100)+"%";
+}
+function registerBattleMistake(){
+  if(battleState.finished || !battleState.mode)return;
+  battleState.mistakes=Math.min(5,battleState.mistakes+1);
+  updateBattleHud();
+  if(battleState.mode==="battle" && battleState.mistakes>=5){
+    finishBattle(false,"ゲームオーバー");
+  }
+}
+function battleAttack(){
+  if(battleState.finished)return;
+  battleState.enemyHp=Math.max(0,battleState.enemyHp-1);
+  const banner=$("#battleFieldBanner");
+  $("#battleAttackMessage").textContent="こうげき！";
+  banner.hidden=false;
+  banner.classList.remove("attack-pop"); void banner.offsetWidth; banner.classList.add("attack-pop");
+  const img=$("#enemyMini"); img.classList.remove("enemy-hit"); void img.offsetWidth; img.classList.add("enemy-hit");
+  updateBattleHud();
+  window.setTimeout(()=>{
+    banner.hidden=true;
+    img.classList.remove("enemy-hit");
+  },500);
+}
+function battlePlaceCorrect(){
+  battleAttack();
+}
+function battleProblemComplete(){
+  if(battleState.finished)return;
+  battleState.correct+=1;
+  battleState.enemyIndex+=1;
+  if(battleState.enemyIndex>=battleState.questionTotal){
+    finishBattle(true,battleState.mode==="battle"?"バトルクリア！":"タイムアタック終了！");
+    return;
+  }
+  state.questionIndex=battleState.enemyIndex;
+  startQuestion();
+  setupBattleEnemy();
+}
+function finishBattle(won,title){
+  if(battleState.finished)return;
+  battleState.finished=true;
+  clearInterval(battleState.timerId);
+  battleState.timerId=null;
+  const elapsed=(performance.now()-battleState.startedAt)/1000;
+  const record=battleRecord();
+  let recordText="";
+  if(battleState.mode==="time"){
+    const best=record.bestTime;
+    if(won && (!best || elapsed<best)){
+      record.bestTime=elapsed;
+      recordText="ベストタイム更新！";
+    }else if(best){
+      recordText="ベスト "+formatBattleTime(best);
+    }
+  }
+  saveBattleRecord(record);
+  $("#battleResultMark").textContent=won?"✓":"×";
+  $("#battleResultKicker").textContent=battleState.mode==="battle"?"5問バトル":"10問タイムアタック";
+  $("#battleResultTitle").textContent=title;
+  $("#battleResultText").textContent=battleState.mode==="battle"
+    ? "正解 "+battleState.correct+"問　ミス "+battleState.mistakes+"回"
+    : "タイム "+formatBattleTime(elapsed)+"\n正解 "+battleState.correct+"問　ミス "+battleState.mistakes+"回"+(recordText?"\n"+recordText:"");
+  $("#battleResultOverlay").hidden=false;
+}
+function endBattleToHome(){
+  clearInterval(battleState.timerId);
+  battleState.timerId=null;
+  battleState.mode=null;
+  battleHud.hidden=true;
+  $("#battleResultOverlay").hidden=true;
+  showScreen(homeScreen);
+  renderHome();
+}
+function startAgainBattle(){
+  $("#battleResultOverlay").hidden=true;
+  startBattleMode();
+}
+
 const STORAGE_KEY = "tashizanHissanRecord.v1";
 
 const state = {
@@ -475,6 +673,7 @@ function handleCarryChoice(choice) {
   if (!step || step.kind !== "carry-check") return;
 
   if (choice !== step.answer) {
+    registerBattleMistake();
     setFeedback(
       choice === "yes"
         ? "10以上になるか、もう一度たしてみよう。"
@@ -504,6 +703,7 @@ function checkInput() {
   if (!step || step.kind !== "sum-input") return;
 
   if (state.input !== step.answer) {
+    registerBattleMistake();
     setFeedback(
       step.requiresCarry
         ? "10以上になるときは、答えを2けたで入力します。"
@@ -515,6 +715,7 @@ function checkInput() {
   }
 
   if (step.requiresCarry) {
+    battlePlaceCorrect();
     const full = Number(state.input);
     // 2けたの答え（例：9＋4→13）から、1の位とくり上がりを分けて書く。
     const resultDigit = full % 10;
@@ -538,6 +739,7 @@ function checkInput() {
       "good"
     );
   } else {
+    battlePlaceCorrect();
     getCell(3, step.col).textContent = step.answer;
     setFeedback("正解。次のくらいへ進もう。", "good");
   }
@@ -547,7 +749,8 @@ function checkInput() {
   window.setTimeout(() => {
     state.stepIndex += 1;
     if (state.steps[state.stepIndex]?.kind === "finish") {
-      completeProblem();
+      if (battleState.mode) battleProblemComplete();
+      else completeProblem();
     } else {
       renderCurrentStep();
     }
@@ -597,6 +800,9 @@ function completeProblem() {
 }
 
 function startLevel(levelId) {
+  battleState.mode=null;
+  battleState.finished=false;
+  battleHud.hidden=true;
   const level = LEVELS.find(item => item.id === levelId);
   if (!level) return;
 
@@ -691,6 +897,12 @@ $("#numberPad").addEventListener("click", event => {
 });
 
 $("#homeButton").addEventListener("click", () => {
+  clearInterval(battleState.timerId);
+  battleState.timerId=null;
+  battleState.mode=null;
+  battleState.finished=true;
+  battleHud.hidden=true;
+  $("#battleResultOverlay").hidden=true;
   showScreen(homeScreen);
   renderHome();
 });
@@ -725,3 +937,12 @@ window.addEventListener("orientationchange", () => {
 });
 
 renderHome();
+
+$("#modeChoice").addEventListener("click", event=>{
+  const button=event.target.closest("[data-mode]");
+  if(button)selectBattleMode(button.dataset.mode);
+});
+$("#battleStartButton").addEventListener("click",startBattleMode);
+$("#battleSetupBackButton").addEventListener("click",()=>{showScreen(homeScreen);renderHome();});
+$("#battleResultAgain").addEventListener("click",startAgainBattle);
+$("#battleResultHome").addEventListener("click",endBattleToHome);
