@@ -431,11 +431,11 @@ function handleCarryChoice(choice) {
     "good"
   );
 
-  window.setTimeout(() => {
-    state.stepIndex += 1;
-    state.input = "";
-    renderCurrentStep();
-  }, 300);
+  // くり上がりの選択直後に、答え入力へ確実に切り替える。
+  // 待ち時間を入れないことで、タブレットでもキーパッドの切り替えが途切れない。
+  state.stepIndex += 1;
+  state.input = "";
+  renderCurrentStep();
 }
 
 function checkInput() {
@@ -455,6 +455,7 @@ function checkInput() {
 
   if (step.requiresCarry) {
     const full = Number(state.input);
+    // 2けたの答え（例：9＋4→13）から、1の位とくり上がりを分けて書く。
     const resultDigit = full % 10;
     const carryDigit = Math.floor(full / 10);
 
