@@ -145,42 +145,37 @@ function buildSteps(model) {
       : String(data.aDigit) + "＋" + String(data.bDigit);
 
     steps.push({
-      kind: "result-digit",
+      kind: "carry-check",
       col,
-      title: place + "をたそう",
+      title: place + "の くり上がりは？",
       text: data.carryIn > 0
-        ? "くり上がってきた 1 もいっしょにたします。"
-        : "同じくらいの数字をたします。",
-      prompt: { expression, answer: String(data.resultDigit) }
+        ? "まず、このくらいをたして、くり上がりがあるか考えよう。"
+        : "まず、このくらいをたして、くり上がりがあるか考えよう。",
+      expression,
+      answer: data.carryOut > 0 ? "yes" : "no"
     });
 
-    if (data.carryOut > 0) {
-      if (col > model.startCol) {
-        steps.push({
-          kind: "carry",
-          col,
-          targetCol: col - 1,
-          title: "1をくり上げよう",
-          text: "1を左となりのくらいへ書きます。",
-          prompt: { expression: "1", answer: "1" }
-        });
-      } else {
-        steps.push({
-          kind: "final-carry",
-          col,
-          targetCol: col - 1,
-          title: "左はしの 1 を書こう",
-          text: "いちばん左にくり上がった 1 も、答えに書きます。",
-          prompt: { expression: "くり上がり", answer: "1" }
-        });
-      }
-    }
+    steps.push({
+      kind: "sum-input",
+      col,
+      title: place + "の答えは？",
+      text: data.carryOut > 0
+        ? "10以上になったら、答えを2けたで入力しよう。"
+        : "計算した答えを入力しよう。",
+      expression,
+      answer: data.carryOut > 0
+        ? String(data.aDigit + data.bDigit + data.carryIn)
+        : String(data.resultDigit),
+      requiresCarry: data.carryOut > 0,
+      carryOut: data.carryOut,
+      targetCol: col - 1
+    });
   }
 
   steps.push({
     kind: "finish",
     title: "筆算のできあがり",
-    text: "右から順に、たして、書いて、くり上げることができました。"
+    text: "右から順に、たして、くり上がりを考えて、答えを書くことができました。"
   });
 
   return steps;
@@ -250,27 +245,21 @@ function getCellSize(cols) {
 }
 
 function updateBoardVisuals() {
-  $$(".cell", board).forEach(cell => cell.classList.remove("focus", "done", "wrong"));
+  $(".cell", board).forEach(cell => cell.classList.remove("focus", "done", "wrong"));
 
   const current = state.steps[state.stepIndex];
   if (!current) return;
 
-  if (current.kind === "result-digit") {
-    getCell(0, current.col)?.classList.add("focus");
+  if (current.kind === "carry-check" || current.kind === "sum-input") {
     getCell(1, current.col)?.classList.add("focus");
     getCell(2, current.col)?.classList.add("focus");
     getCell(3, current.col)?.classList.add("focus");
-  }
-
-  if (current.kind === "carry") {
-    getCell(0, current.targetCol)?.classList.add("focus");
-    getCell(1, current.col)?.classList.add("focus");
-    getCell(2, current.col)?.classList.add("focus");
-  }
-
-  if (current.kind === "final-carry") {
-    getCell(0, current.targetCol)?.classList.add("focus");
-    getCell(3, current.targetCol)?.classList.add("focus");
+    if (current.carryOut > 0 || current.kind === "carry-check") {
+      getCell(0, current.col)?.classList.add("focus");
+    }
+    if (current.kind === "sum-input" && current.requiresCarry && current.targetCol >= 0) {
+      getCell(0, current.targetCol)?.classList.add("focus");
+    }
   }
 
   for (let col = modelStartCol(); col < state.problem.cols; col += 1) {
@@ -286,7 +275,7 @@ function modelStartCol() {
 
 function hasCompletedColumn(col) {
   return state.steps.slice(0, state.stepIndex + 1).some(step =>
-    step.kind === "result-digit" && step.col === col
+    step.kind === "sum-input" && step.col === col
   );
 }
 
@@ -299,8 +288,9 @@ function updateColumnGuide() {
     return;
   }
 
-  const col = current.kind === "carry" ? current.targetCol :
-    current.kind === "final-carry" ? current.targetCol : current.col;
+  const col = current.kind === "sum-input" && current.requiresCarry && current.targetCol >= 0
+    ? current.targetCol
+    : current.col;
 
   const cell = getCell(0, col);
   if (!cell) return;
@@ -315,14 +305,15 @@ function updateColumnGuide() {
 
 function updateStepRail() {
   const current = state.steps[state.stepIndex];
-  const pills = $$(".step-pill");
+  const pills = $(".step-pill");
   pills.forEach(pill => pill.classList.remove("active", "done"));
 
   if (!current) return;
 
-  if (current.kind === "result-digit") {
-    pills[0]?.classList.add("active");
-  } else if (current.kind === "carry" || current.kind === "final-carry") {
+  if (current.kind === "carry-check") {
+    pills[0]?.classList.add("done");
+    pills[1]?.classList.add("active");
+  } else if (current.kind === "sum-input") {
     pills[0]?.classList.add("done");
     pills[1]?.classList.add("done");
     pills[2]?.classList.add("active");
@@ -345,12 +336,18 @@ function renderCurrentStep() {
   feedback.className = "feedback neutral";
 
   if (step.kind === "finish") {
-    prompt.textContent = String(state.problem.a) + "＋" + String(state.problem.b) + "＝" + String(state.problem.sum);
+    prompt.textContent =
+      String(state.problem.a) + "＋" + String(state.problem.b) + "＝" + String(state.problem.sum);
     $("#answerDisplay").textContent = "✓";
     $("#answerDisplay").style.borderColor = "#67b78d";
     $("#answerDisplay").style.background = "#effaf4";
+  } else if (step.kind === "carry-check") {
+    prompt.textContent = step.expression;
+    $("#answerDisplay").textContent = "ある？ なし？";
+    $("#answerDisplay").style.borderColor = "";
+    $("#answerDisplay").style.background = "";
   } else {
-    prompt.textContent = step.prompt.expression;
+    prompt.textContent = step.expression + "＝";
     $("#answerDisplay").textContent = state.input || "＿";
     $("#answerDisplay").style.borderColor = "";
     $("#answerDisplay").style.background = "";
@@ -370,6 +367,13 @@ function renderKeypad() {
     return;
   }
 
+  if (step.kind === "carry-check") {
+    pad.innerHTML =
+      '<button type="button" class="choice-button carry-yes" data-choice="yes">ある</button>' +
+      '<button type="button" class="choice-button carry-no" data-choice="no">なし</button>';
+    return;
+  }
+
   const keys = ["1","2","3","4","5","6","7","8","9","⌫","0","決定"];
   pad.innerHTML = keys.map(key => {
     const cls = key === "決定" ? "submit" : key === "⌫" ? "function" : "";
@@ -385,7 +389,7 @@ function setFeedback(message, type) {
 
 function handlePadKey(key) {
   const step = state.steps[state.stepIndex];
-  if (!step || step.kind === "finish") return;
+  if (!step || step.kind === "finish" || step.kind === "carry-check") return;
 
   if (key === "⌫") {
     state.input = "";
@@ -398,21 +402,22 @@ function handlePadKey(key) {
     return;
   }
 
-  if (/^\d$/.test(key) && state.input.length === 0) {
-    state.input = key;
+  const maxLength = step.requiresCarry ? 2 : 1;
+  if (/^\d$/.test(key) && state.input.length < maxLength) {
+    state.input += key;
     renderCurrentStep();
   }
 }
 
-function checkInput() {
+function handleCarryChoice(choice) {
   const step = state.steps[state.stepIndex];
-  if (!step || !step.prompt) return;
+  if (!step || step.kind !== "carry-check") return;
 
-  if (state.input !== step.prompt.answer) {
+  if (choice !== step.answer) {
     setFeedback(
-      step.kind === "carry" || step.kind === "final-carry"
-        ? "くり上げる先のくらいを確認してみよう。"
-        : "たす数字をもう一度見てみよう。",
+      choice === "yes"
+        ? "10以上になるか、もう一度たしてみよう。"
+        : "10以上になるか、数字をもう一度見てみよう。",
       "bad"
     );
     markCurrentCellWrong();
@@ -420,18 +425,59 @@ function checkInput() {
   }
 
   setFeedback(
-    step.kind === "carry" || step.kind === "final-carry"
-      ? "くり上げ、OK。"
-      : "正解。次のくらいへ進もう。",
+    choice === "yes"
+      ? "くり上がりあり。答えを2けたで入力しよう。"
+      : "くり上がりなし。答えを入力しよう。",
     "good"
   );
 
-  if (step.kind === "carry") {
-    getCell(0, step.targetCol).textContent = step.prompt.answer;
-  } else if (step.kind === "final-carry") {
-    getCell(3, step.targetCol).textContent = step.prompt.answer;
+  window.setTimeout(() => {
+    state.stepIndex += 1;
+    state.input = "";
+    renderCurrentStep();
+  }, 300);
+}
+
+function checkInput() {
+  const step = state.steps[state.stepIndex];
+  if (!step || step.kind !== "sum-input") return;
+
+  if (state.input !== step.answer) {
+    setFeedback(
+      step.requiresCarry
+        ? "10以上になるときは、答えを2けたで入力します。"
+        : "たす数字をもう一度見てみよう。",
+      "bad"
+    );
+    markCurrentCellWrong();
+    return;
+  }
+
+  if (step.requiresCarry) {
+    const full = Number(state.input);
+    const resultDigit = full % 10;
+    const carryDigit = Math.floor(full / 10);
+
+    if (carryDigit > 0) {
+      if (step.targetCol >= 0) {
+        if (step.col > state.problem.startCol) {
+          getCell(0, step.targetCol).textContent = String(carryDigit);
+        } else {
+          getCell(3, step.targetCol).textContent = String(carryDigit);
+        }
+      }
+    }
+    getCell(3, step.col).textContent = String(resultDigit);
+
+    setFeedback(
+      String(full) + "。 " +
+      String(carryDigit) + "をくり上げて、" +
+      String(resultDigit) + "を答えのくらいに書きました。",
+      "good"
+    );
   } else {
-    getCell(3, step.col).textContent = step.prompt.answer;
+    getCell(3, step.col).textContent = step.answer;
+    setFeedback("正解。次のくらいへ進もう。", "good");
   }
 
   state.input = "";
@@ -443,7 +489,7 @@ function checkInput() {
     } else {
       renderCurrentStep();
     }
-  }, 280);
+  }, 500);
 }
 
 function markCurrentCellWrong() {
@@ -451,12 +497,12 @@ function markCurrentCellWrong() {
   if (!step) return;
 
   const cells = [];
-  if (step.kind === "carry") {
-    cells.push(getCell(0, step.targetCol), getCell(1, step.col), getCell(2, step.col));
-  } else if (step.kind === "final-carry") {
-    cells.push(getCell(0, step.targetCol), getCell(3, step.targetCol));
-  } else {
-    cells.push(getCell(1, step.col), getCell(2, step.col), getCell(3, step.col));
+
+  if (step.kind === "carry-check" || step.kind === "sum-input") {
+    cells.push(getCell(0, step.col), getCell(1, step.col), getCell(2, step.col), getCell(3, step.col));
+    if (step.kind === "sum-input" && step.targetCol >= 0) {
+      cells.push(getCell(0, step.targetCol), getCell(3, step.targetCol));
+    }
   }
 
   cells.filter(Boolean).forEach(cell => {
@@ -555,12 +601,12 @@ function showHint() {
 
   let message = "";
 
-  if (step.kind === "carry" || step.kind === "final-carry") {
-    message = "くり上がりは、今たしているくらいの左となりへ書きます。";
-  } else if (step.prompt.expression.includes("＋1")) {
-    message = "左となりから 1 がくり上がってきています。先に 1 もたします。";
+  if (step.kind === "carry-check") {
+    message = "くらいの数字をたしてみよう。10以上になったら「ある」です。";
+  } else if (step.kind === "sum-input" && step.requiresCarry) {
+    message = "10以上になったときは、答えを2けたで入力します。たとえば 9＋4 なら 13 です。";
   } else {
-    message = "右のくらいから計算します。答えの数字は、今光っているますに書きます。";
+    message = "右のくらいから計算します。今光っているくらいの答えを入力します。";
   }
 
   hintBox.textContent = message;
@@ -572,6 +618,12 @@ function showHint() {
 }
 
 $("#numberPad").addEventListener("click", event => {
+  const choice = event.target.closest("[data-choice]");
+  if (choice) {
+    handleCarryChoice(choice.dataset.choice);
+    return;
+  }
+
   const button = event.target.closest("[data-key]");
   if (button) handlePadKey(button.dataset.key);
 });
