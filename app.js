@@ -1,5 +1,6 @@
 import { badgeSystem } from "./badges.js";
 const $ = (selector, root = document) => root.querySelector(selector);
+const $ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 let soundContext = null;
 let soundEnabled = true;
