@@ -709,6 +709,19 @@ button:focus-visible{outline:3px solid #7aa6cf;outline-offset:2px}
 @keyframes heroDamagePop{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px) rotate(-3deg)}40%{transform:translateX(9px) rotate(3deg)}60%{transform:translateX(-6px)}}
 @keyframes specialPop{0%{transform:scale(.55);opacity:0}35%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:1}}
 
+/* バトル画面の背景 */
+#gameScreen{
+  background-color:#dfe8ee;
+  background-image:url("https://tt-sensei.github.io/navi-character-/assets/web/fantasy/backgrounds/volcano.webp");
+  background-position:center center;
+  background-size:cover;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+.battle-game-layout .work-area{
+  background:transparent;
+}
+
 /* バトル画面：筆算を少し大きく、左右の余白を圧縮 */
 @media (min-width:901px){
   .battle-game-layout{
